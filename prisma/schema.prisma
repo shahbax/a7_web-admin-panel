@@ -188,6 +188,32 @@ model Version {
 }
 
 // -----------------------------------------------------------------------------
+// Leads — submissions from every public form (contact, inquiry, newsletter,
+// sell, careers, area experts, etc.). Bitrix lead creation is added later with
+// the integrations; for now each lead is stored and emailed.
+// -----------------------------------------------------------------------------
+
+model Lead {
+  id        String   @id @default(cuid())
+  type      String // "newsletter" | "contact" | "sell" | "inquiry" | "career" | ...
+  name      String?
+  email     String?
+  phone     String?
+  message   String?
+  sourceUrl String?
+  reference String? // listing / agent / page reference
+  payload   Json?
+  ip        String?
+  handled   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([type, createdAt])
+  @@index([handled])
+  @@index([createdAt])
+  @@map("leads")
+}
+
+// -----------------------------------------------------------------------------
 // Login attempts — rate limiting / lockout (survives process restarts)
 // -----------------------------------------------------------------------------
 

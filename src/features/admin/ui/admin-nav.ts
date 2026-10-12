@@ -3,6 +3,7 @@ import {
   Image as ImageIcon,
   FileText,
   Layers,
+  Inbox,
   Settings as SettingsIcon,
   type LucideIcon,
 } from "lucide-react"
@@ -28,6 +29,7 @@ export const adminNavItems: readonly AdminNavItem[] = [
   { label: "Pages", href: "/admin/pages", icon: FileText },
   { label: "Collections", href: "/admin/collections", icon: Layers },
   { label: "Media library", href: "/admin/media", icon: ImageIcon },
+  { label: "Leads", href: "/admin/leads", icon: Inbox },
   { label: "Settings", href: "/admin/settings", icon: SettingsIcon, minRole: "ADMIN" },
 ]
 
