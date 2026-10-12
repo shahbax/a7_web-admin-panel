@@ -2,6 +2,7 @@ import {
   LayoutDashboard,
   Image as ImageIcon,
   FileText,
+  Layers,
   Settings as SettingsIcon,
   type LucideIcon,
 } from "lucide-react"
@@ -25,6 +26,7 @@ export type AdminNavItem = {
 export const adminNavItems: readonly AdminNavItem[] = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { label: "Pages", href: "/admin/pages", icon: FileText },
+  { label: "Collections", href: "/admin/collections", icon: Layers },
   { label: "Media library", href: "/admin/media", icon: ImageIcon },
   { label: "Settings", href: "/admin/settings", icon: SettingsIcon, minRole: "ADMIN" },
 ]
