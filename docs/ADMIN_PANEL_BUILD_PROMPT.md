@@ -304,6 +304,9 @@ The live site's server details:
 1. **Database:** a new docker compose project at `/opt/a7-website-db/` with its own Postgres container (`a7-website-postgres`) bound to `127.0.0.1:5440` (check that it's free first), with a named volume. Nightly `pg_dump` backups to `/opt/a7-website-backups` with 14-day retention, plus a backup of the uploads folder.
 2. **Env:** `/opt/a7-website/.env.production`, never committed. Commit a complete `.env.example` listing every variable: DB URL, auth secret, `APP_ENCRYPTION_KEY`, SMTP (optional fallback; SMTP should also be configurable in admin settings), owner seed email/password. Integration credentials are **not** env vars; they're entered in the admin panel (section 6).
 3. **Git-based deploys:** convert `/opt/a7-website` into a git checkout of this repo, keeping the existing `.env` and data.
+   - The repo is **private**: `github.com/shahbax/a7_web-admin-panel`, branch `main`.
+   - The server needs a **read-only GitHub deploy key**: generate it on the server, add the public key under repo Settings → Deploy keys, and clone over SSH.
+   - Put the exact commands in the runbook.
 4. **CI/CD:** a GitHub Actions workflow `deploy.yml`.
    - Runs on push to `main` after CI passes.
    - SSHes to the VPS using repository secrets `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY`. **I will create a dedicated deploy key; tell me exactly what to add.**
