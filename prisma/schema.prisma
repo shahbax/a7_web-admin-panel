@@ -1,0 +1,116 @@
+// A7 Group website — Prisma schema
+// Phase 1 (Foundation): auth/users, media library, audit log, login throttling.
+// Later phases extend this file (CMS pages/blocks, collections, integrations,
+// leads). All schema changes go through committed migrations.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// -----------------------------------------------------------------------------
+// Auth & users
+// -----------------------------------------------------------------------------
+
+enum Role {
+  OWNER // everything, plus user management
+  ADMIN // all content and settings
+  EDITOR // content only, no settings or users
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         Role      @default(EDITOR)
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  uploadedMedia MediaAsset[] @relation("MediaUploadedBy")
+  auditLogs     AuditLog[]
+
+  @@index([role])
+  @@map("users")
+}
+
+// -----------------------------------------------------------------------------
+// Media library
+// -----------------------------------------------------------------------------
+
+enum MediaKind {
+  IMAGE
+  VIDEO
+  PDF
+  OTHER
+}
+
+model MediaAsset {
+  id           String    @id @default(cuid())
+  filename     String // stored (on-disk) filename, unique within uploads dir
+  originalName String
+  path         String // path relative to the uploads root, e.g. "2026/10/abc.jpg"
+  url          String // public URL, e.g. "/uploads/2026/10/abc.jpg"
+  mimeType     String
+  kind         MediaKind @default(IMAGE)
+  size         Int // bytes
+  width        Int?
+  height       Int?
+  alt          String    @default("")
+  folder       String    @default("") // simple folder path for organisation
+  uploadedById String?
+  uploadedBy   User?     @relation("MediaUploadedBy", fields: [uploadedById], references: [id], onDelete: SetNull)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([path])
+  @@index([kind])
+  @@index([folder])
+  @@index([createdAt])
+  @@map("media_assets")
+}
+
+// -----------------------------------------------------------------------------
+// Audit log — who changed what, when
+// -----------------------------------------------------------------------------
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userEmail  String // denormalised so the log survives user deletion
+  action     String // e.g. "media.upload", "auth.login", "user.create"
+  entityType String? // e.g. "MediaAsset", "User"
+  entityId   String?
+  summary    String   @default("")
+  metadata   Json?
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// -----------------------------------------------------------------------------
+// Login attempts — rate limiting / lockout (survives process restarts)
+// -----------------------------------------------------------------------------
+
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  email     String
+  ip        String   @default("")
+  success   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
+  @@index([ip, createdAt])
+  @@map("login_attempts")
+}
