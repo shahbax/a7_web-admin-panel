@@ -115,6 +115,36 @@ model SiteSetting {
 }
 
 // -----------------------------------------------------------------------------
+// CMS pages — an ordered list of block instances with draft/published states.
+// -----------------------------------------------------------------------------
+
+enum PageStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Page {
+  id             String     @id @default(cuid())
+  slug           String     @unique
+  title          String
+  template       String     @default("default") // default | service | landing
+  status         PageStatus @default(DRAFT)
+  seoTitle       String?
+  seoDescription String?
+  ogImageUrl     String?
+  draft          Json // Block[] — working copy
+  published      Json? // Block[] — live snapshot
+  isSystem       Boolean    @default(false) // migrated core pages
+  createdById    String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  publishedAt    DateTime?
+
+  @@index([status])
+  @@map("pages")
+}
+
+// -----------------------------------------------------------------------------
 // Generic version history (settings + CMS pages). Keeps the last N snapshots
 // per entity for restore.
 // -----------------------------------------------------------------------------

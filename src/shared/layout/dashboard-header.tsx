@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { Bell, Menu, Search } from "lucide-react"
 
 import type { AuthUser } from "@/features/auth/core/domain/entity"
@@ -92,7 +93,7 @@ export function DashboardHeader({ user, onOpenMobileSidebar }: DashboardHeaderPr
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <a href="/dashboard/settings">Settings</a>
+              <Link href="/admin/settings">Settings</Link>
             </DropdownMenuItem>
             <DropdownMenuItem
               onSelect={() => {
