@@ -23,7 +23,12 @@ export type AllSettings = {
 const MAX_VERSIONS = 20
 
 async function loadAll(): Promise<AllSettings> {
-  const rows = await prisma.siteSetting.findMany()
+  let rows: { key: string; data: unknown }[] = []
+  try {
+    rows = await prisma.siteSetting.findMany()
+  } catch {
+    // Database unreachable (e.g. during CI build) — fall back to code defaults.
+  }
   const byKey = new Map(rows.map((r) => [r.key, r.data]))
   const result = {} as AllSettings
   for (const key of SETTING_KEYS) {

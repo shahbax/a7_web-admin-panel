@@ -13,8 +13,12 @@ import { getSettings } from "@/features/cms/settings/service"
 export const dynamicParams = true
 
 export async function generateStaticParams() {
-  const slugs = await getAllPublishedSlugs()
-  return slugs.map((slug) => ({ slug: slug.split("/") }))
+  try {
+    const slugs = await getAllPublishedSlugs()
+    return slugs.map((slug) => ({ slug: slug.split("/") }))
+  } catch {
+    return []
+  }
 }
 
 async function resolve(slugParts: string[]) {

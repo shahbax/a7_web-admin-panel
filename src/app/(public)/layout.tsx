@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/shared/theme"
 import { getSettings } from "@/features/cms/settings/service"
 import { toHeaderNav } from "@/features/cms/settings/schemas"
 import { Analytics } from "@/features/cms/settings/ui/analytics"
+import { OrganizationJsonLd } from "@/features/cms/settings/ui/organization-jsonld"
 
 export async function generateMetadata(): Promise<Metadata> {
   const { seo } = await getSettings()
@@ -36,10 +37,11 @@ export default async function PublicLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const { header, menu, footer, seo } = await getSettings()
+  const { site, header, menu, footer, seo } = await getSettings()
 
   return (
     <div className="flex min-h-svh flex-col bg-white font-inter text-a7-text-gray">
+      <OrganizationJsonLd site={site} footer={footer} />
       <ThemeProvider>
         <LayoutHeader
           nav={toHeaderNav(menu)}
