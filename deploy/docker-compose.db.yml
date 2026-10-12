@@ -1,0 +1,30 @@
+# A7 website database — a dedicated Postgres container, isolated from the other
+# apps on the VPS. Lives at /opt/a7-website-db/ and is bound to localhost:5440.
+#
+#   cd /opt/a7-website-db && docker compose -f docker-compose.db.yml up -d
+#
+# Credentials come from /opt/a7-website-db/.env.db (never committed).
+
+services:
+  a7-website-postgres:
+    image: postgres:16
+    container_name: a7-website-postgres
+    restart: unless-stopped
+    # Bind to loopback only — never expose the database to the public internet.
+    ports:
+      - "127.0.0.1:5440:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-a7_website}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env.db}
+      POSTGRES_DB: ${POSTGRES_DB:-a7_website}
+    volumes:
+      - a7-website-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-a7_website} -d ${POSTGRES_DB:-a7_website}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  a7-website-pgdata:
+    name: a7-website-pgdata
