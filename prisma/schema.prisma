@@ -100,6 +100,39 @@ model AuditLog {
 }
 
 // -----------------------------------------------------------------------------
+// Global site settings — one row per settings group (site, header, menu,
+// footer, seo). Stored as validated JSON; defaults live in code so the public
+// site is unchanged until an admin edits a group.
+// -----------------------------------------------------------------------------
+
+model SiteSetting {
+  key         String   @id // "site" | "header" | "menu" | "footer" | "seo"
+  data        Json
+  updatedById String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+// -----------------------------------------------------------------------------
+// Generic version history (settings + CMS pages). Keeps the last N snapshots
+// per entity for restore.
+// -----------------------------------------------------------------------------
+
+model Version {
+  id          String   @id @default(cuid())
+  entityType  String // "setting" | "page"
+  entityId    String // settings key, or page id
+  data        Json
+  label       String?
+  createdById String?
+  createdAt   DateTime @default(now())
+
+  @@index([entityType, entityId, createdAt])
+  @@map("versions")
+}
+
+// -----------------------------------------------------------------------------
 // Login attempts — rate limiting / lockout (survives process restarts)
 // -----------------------------------------------------------------------------
 
