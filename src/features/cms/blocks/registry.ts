@@ -232,6 +232,66 @@ export const blockRegistry: BlockDefinition[] = [
     ],
     defaults: { size: "md", divider: false },
   },
+
+  // --- Existing brand sections (render the real site components) ----------
+  {
+    type: "home.faq",
+    label: "FAQ section (brand)",
+    description: "The site's FAQ accordion.",
+    category: "existing",
+    fields: [
+      { name: "title", label: "Title", type: "text" },
+      {
+        name: "items", label: "Questions", type: "list", itemLabel: "Q&A",
+        itemFields: [
+          { name: "question", label: "Question", type: "text" },
+          { name: "answer", label: "Answer", type: "textarea" },
+        ],
+      },
+    ],
+    defaults: {
+      title: "Frequently asked questions",
+      items: [{ question: "A question?", answer: "An answer." }],
+    },
+  },
+  {
+    type: "home.testimonials",
+    label: "Testimonials carousel (brand)",
+    description: "The site's “Happy home owners” testimonial slider.",
+    category: "existing",
+    fields: [
+      {
+        name: "items", label: "Testimonials", type: "list", itemLabel: "Testimonial",
+        itemFields: [
+          { name: "name", label: "Name", type: "text" },
+          { name: "role", label: "Role / location", type: "text" },
+          { name: "quote", label: "Quote", type: "textarea" },
+          { name: "avatar", label: "Avatar", type: "image" },
+        ],
+      },
+    ],
+    defaults: {
+      items: [{ name: "Jane Doe", role: "Dubai, UAE", quote: "A wonderful experience.", avatar: "" }],
+    },
+  },
+  {
+    type: "home.partners",
+    label: "Developer partners (brand)",
+    description: "The site's trusted-developer logo carousel.",
+    category: "existing",
+    fields: [
+      {
+        name: "items", label: "Partners", type: "list", itemLabel: "Partner",
+        itemFields: [
+          { name: "name", label: "Name", type: "text" },
+          { name: "logo", label: "Logo", type: "image" },
+        ],
+      },
+    ],
+    defaults: {
+      items: [{ name: "Emaar", logo: "/assets/developers/emaar.png" }],
+    },
+  },
 ]
 
 const byType = new Map(blockRegistry.map((b) => [b.type, b]))

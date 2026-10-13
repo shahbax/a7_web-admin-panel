@@ -25,6 +25,9 @@ import {
 import { Button } from "@/shared/ui/button"
 import { cn } from "@/shared/lib/cn"
 import type { BlockProps } from "@/features/cms/blocks/types"
+import { HappyHomeOwners } from "@/features/home/ui/home/happy-home-owners"
+import { TrustedDeveloperPartners } from "@/features/home/ui/home/trusted-developer-partners"
+import { HomeFaqSection } from "@/shared/ui/marketing/home-faq-section"
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number]
 const VIEWPORT = { once: true, amount: 0.3 as const }
@@ -355,7 +358,39 @@ function SpacerBlock({ props }: { props: BlockProps }) {
   )
 }
 
+// --- Existing brand-section wrappers ---------------------------------------
+
+function HomeFaqBlock({ props }: { props: BlockProps }) {
+  const items = arr(props, "items").map((it) => ({
+    title: String(it.question ?? ""),
+    content: String(it.answer ?? ""),
+  }))
+  return <HomeFaqSection title={s(props, "title", "Frequently asked questions")} items={items.length ? items : undefined} />
+}
+
+function HomeTestimonialsBlock({ props }: { props: BlockProps }) {
+  const testimonials = arr(props, "items").map((it, i) => ({
+    id: String(i),
+    name: String(it.name ?? ""),
+    role: String(it.role ?? ""),
+    quote: String(it.quote ?? ""),
+    avatarUrl: String(it.avatar ?? ""),
+  }))
+  if (testimonials.length === 0) return null
+  return <HappyHomeOwners testimonials={testimonials} />
+}
+
+function HomePartnersBlock({ props }: { props: BlockProps }) {
+  const partners = arr(props, "items")
+    .map((it) => ({ name: String(it.name ?? ""), logo: String(it.logo ?? "") }))
+    .filter((p) => p.logo)
+  return <TrustedDeveloperPartners partners={partners.length ? partners : undefined} />
+}
+
 export const blockComponents: Record<string, (p: { props: BlockProps }) => React.ReactNode> = {
+  "home.faq": HomeFaqBlock,
+  "home.testimonials": HomeTestimonialsBlock,
+  "home.partners": HomePartnersBlock,
   "generic.sectionHeading": SectionHeadingBlock,
   "generic.richText": RichTextBlock,
   "generic.buttons": ButtonsBlock,
