@@ -12,9 +12,11 @@ import { HeroSection } from "@/features/home/ui/home/hero-section"
 import { MostTrendingProjects } from "@/features/home/ui/home/most-trending-projects"
 import { OffPlanLatestLaunches } from "@/features/home/ui/home/off-plan-latest-launches"
 import { HOME_HERO_IMAGE_FALLBACK, HERO_SLIDE_IMAGES } from "@/shared/lib/constants/home.constants"
-import { HOME_NEWS_POSTS } from "@/features/home/content/home-news"
 import { HOME_REAL_ESTATE_EXPERTS } from "@/features/home/content/home-real-estate-experts"
-import { HOME_TESTIMONIALS } from "@/features/home/content/home-testimonials"
+import {
+  getHomeNewsPosts,
+  getHomeTestimonials,
+} from "@/features/home/services/home-content-loader"
 import {
   fetchProperties,
   fetchPropertyListings,
@@ -22,10 +24,12 @@ import {
 } from "@/features/property"
 
 export default async function HomePage() {
-  const [properties, listings, trendingVillas] = await Promise.all([
+  const [properties, listings, trendingVillas, testimonials, newsPosts] = await Promise.all([
     fetchProperties(),
     fetchPropertyListings(),
     fetchTrendingLuxuryVillas(),
+    getHomeTestimonials(),
+    getHomeNewsPosts(),
   ])
 
   return (
@@ -44,8 +48,8 @@ export default async function HomePage() {
       <TrendingLuxuryVillas listings={trendingVillas} />
       <RealEstateExperts experts={HOME_REAL_ESTATE_EXPERTS} />
       <RealEstatingSinceBanner />
-      <RealEstateNews posts={HOME_NEWS_POSTS} />
-      <HappyHomeOwners testimonials={HOME_TESTIMONIALS} />
+      <RealEstateNews posts={newsPosts} />
+      <HappyHomeOwners testimonials={testimonials} />
       <HomeFaqSection />
       <HomeDeveloperCtaNewsletter {...homeDeveloperCtaContent} />
     </div>
