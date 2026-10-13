@@ -7,6 +7,7 @@ import { Input } from "@/shared/ui/input"
 import { Textarea } from "@/shared/ui/textarea"
 import type { AreaDetailContent } from "@/features/area/services/content"
 import { getAreaDetailSectionId } from "@/features/area"
+import { useLeadSubmit } from "@/features/leads/ui/use-lead-submit"
 import { cn } from "@/shared/lib/cn"
 
 type AreaDetailAskExpertsSectionProps = {
@@ -18,9 +19,11 @@ const fieldClassName =
 
 export function AreaDetailAskExpertsSection({ area }: AreaDetailAskExpertsSectionProps) {
   const sectionId = getAreaDetailSectionId("experts")
+  const { pending, done, error, submit } = useLeadSubmit()
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    void submit(event.currentTarget, { type: "area-expert", reference: area.id })
   }
 
   return (
@@ -33,6 +36,11 @@ export function AreaDetailAskExpertsSection({ area }: AreaDetailAskExpertsSectio
           Ask Local Experts
         </h2>
 
+        {done ? (
+          <p className="mt-5 rounded-xl border border-border bg-white px-4 py-6 text-center text-base font-medium text-a7-black md:mt-6">
+            Thanks — your question has been sent. Our local experts will reach out soon.
+          </p>
+        ) : (
         <form className="mt-5 md:mt-6" onSubmit={handleSubmit} noValidate>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             <Input
@@ -79,12 +87,15 @@ export function AreaDetailAskExpertsSection({ area }: AreaDetailAskExpertsSectio
             aria-label="Your question"
           />
 
+          {error ? <p className="mt-4 text-sm text-red-600">{error}</p> : null}
+
           <div className="mt-5 flex justify-end">
-            <Button type="submit" variant="default" shape="pill" size="lg" className="min-w-[9.5rem] px-8">
-              Send Now
+            <Button type="submit" variant="default" shape="pill" size="lg" className="min-w-[9.5rem] px-8" disabled={pending}>
+              {pending ? "Sending…" : "Send Now"}
             </Button>
           </div>
         </form>
+        )}
       </article>
     </section>
   )

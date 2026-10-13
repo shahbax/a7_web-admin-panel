@@ -6,6 +6,7 @@ import type { AgentProfileDetail } from "@/features/agent/core/domain/entity/age
 import { Button } from "@/shared/ui/button"
 import { Input } from "@/shared/ui/input"
 import { Textarea } from "@/shared/ui/textarea"
+import { useLeadSubmit } from "@/features/leads/ui/use-lead-submit"
 import { cn } from "@/shared/lib/cn"
 
 type AgentContactSectionProps = {
@@ -17,8 +18,11 @@ const fieldClassName =
   "border-transparent bg-[#F3F3F3] shadow-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:bg-[#F3F3F3]"
 
 export function AgentContactSection({ agent, className }: AgentContactSectionProps) {
+  const { pending, done, error, submit } = useLeadSubmit()
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    void submit(event.currentTarget, { type: "agent", reference: agent.name })
   }
 
   return (
@@ -36,6 +40,11 @@ export function AgentContactSection({ agent, className }: AgentContactSectionPro
           </p>
         </header>
 
+        {done ? (
+          <p className="mt-6 rounded-xl bg-a7-panel-surface px-4 py-6 text-center text-base font-medium text-a7-black md:mt-8">
+            Thank you — your message has been sent. {agent.name} will be in touch shortly.
+          </p>
+        ) : (
         <form className="mt-6 md:mt-8" onSubmit={handleSubmit} noValidate>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
             <Input
@@ -85,12 +94,15 @@ export function AgentContactSection({ agent, className }: AgentContactSectionPro
             aria-label="Message"
           />
 
+          {error ? <p className="mt-4 text-sm text-red-600">{error}</p> : null}
+
           <div className="mt-5 flex justify-end">
-            <Button type="submit" variant="default" shape="pill" size="lg" className="min-w-[9.5rem] px-8">
-              Send Now
+            <Button type="submit" variant="default" shape="pill" size="lg" className="min-w-[9.5rem] px-8" disabled={pending}>
+              {pending ? "Sending…" : "Send Now"}
             </Button>
           </div>
         </form>
+        )}
       </div>
     </section>
   )
