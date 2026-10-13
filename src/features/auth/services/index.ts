@@ -1,8 +1,17 @@
-export { getAuthSession } from "@/features/auth/core/data/repository/auth.repository"
 export {
-  getSessionUseCase,
-  signInUseCase,
-  signOutUseCase,
-  registerUseCase,
-} from "@/features/auth/core/domain/usecases/auth.usecases"
-export { signInAction, registerAction, signOutAction } from "./auth-actions"
+  loginAction,
+  logoutAction,
+  type AuthActionState,
+} from "./auth-actions"
+export {
+  getCurrentUser,
+  requireUser,
+  requireRole,
+  requireSettingsAccess,
+  requireUserManagement,
+} from "./guards"
+export {
+  checkLoginRateLimit,
+  recordLoginAttempt,
+  clearFailedAttempts,
+} from "./rate-limit"

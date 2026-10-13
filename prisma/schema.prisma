@@ -1,0 +1,230 @@
+// A7 Group website — Prisma schema
+// Phase 1 (Foundation): auth/users, media library, audit log, login throttling.
+// Later phases extend this file (CMS pages/blocks, collections, integrations,
+// leads). All schema changes go through committed migrations.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// -----------------------------------------------------------------------------
+// Auth & users
+// -----------------------------------------------------------------------------
+
+enum Role {
+  OWNER // everything, plus user management
+  ADMIN // all content and settings
+  EDITOR // content only, no settings or users
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         Role      @default(EDITOR)
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  uploadedMedia MediaAsset[] @relation("MediaUploadedBy")
+  auditLogs     AuditLog[]
+
+  @@index([role])
+  @@map("users")
+}
+
+// -----------------------------------------------------------------------------
+// Media library
+// -----------------------------------------------------------------------------
+
+enum MediaKind {
+  IMAGE
+  VIDEO
+  PDF
+  OTHER
+}
+
+model MediaAsset {
+  id           String    @id @default(cuid())
+  filename     String // stored (on-disk) filename, unique within uploads dir
+  originalName String
+  path         String // path relative to the uploads root, e.g. "2026/10/abc.jpg"
+  url          String // public URL, e.g. "/uploads/2026/10/abc.jpg"
+  mimeType     String
+  kind         MediaKind @default(IMAGE)
+  size         Int // bytes
+  width        Int?
+  height       Int?
+  alt          String    @default("")
+  folder       String    @default("") // simple folder path for organisation
+  uploadedById String?
+  uploadedBy   User?     @relation("MediaUploadedBy", fields: [uploadedById], references: [id], onDelete: SetNull)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([path])
+  @@index([kind])
+  @@index([folder])
+  @@index([createdAt])
+  @@map("media_assets")
+}
+
+// -----------------------------------------------------------------------------
+// Audit log — who changed what, when
+// -----------------------------------------------------------------------------
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userEmail  String // denormalised so the log survives user deletion
+  action     String // e.g. "media.upload", "auth.login", "user.create"
+  entityType String? // e.g. "MediaAsset", "User"
+  entityId   String?
+  summary    String   @default("")
+  metadata   Json?
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// -----------------------------------------------------------------------------
+// Global site settings — one row per settings group (site, header, menu,
+// footer, seo). Stored as validated JSON; defaults live in code so the public
+// site is unchanged until an admin edits a group.
+// -----------------------------------------------------------------------------
+
+model SiteSetting {
+  key         String   @id // "site" | "header" | "menu" | "footer" | "seo"
+  data        Json
+  updatedById String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+// -----------------------------------------------------------------------------
+// CMS pages — an ordered list of block instances with draft/published states.
+// -----------------------------------------------------------------------------
+
+enum PageStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Page {
+  id             String     @id @default(cuid())
+  slug           String     @unique
+  title          String
+  template       String     @default("default") // default | service | landing
+  status         PageStatus @default(DRAFT)
+  seoTitle       String?
+  seoDescription String?
+  ogImageUrl     String?
+  draft          Json // Block[] — working copy
+  published      Json? // Block[] — live snapshot
+  isSystem       Boolean    @default(false) // migrated core pages
+  createdById    String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  publishedAt    DateTime?
+
+  @@index([status])
+  @@map("pages")
+}
+
+// -----------------------------------------------------------------------------
+// Content collections — one generic table for testimonials, FAQs, news,
+// events, careers, services, developers, areas, projects, hero slides and
+// partner logos. Field shapes per collection live in code (collections
+// registry); item content is stored as validated JSON.
+// -----------------------------------------------------------------------------
+
+model CollectionItem {
+  id          String     @id @default(cuid())
+  collection  String // registry key, e.g. "testimonials"
+  slug        String?
+  title       String
+  status      PageStatus @default(DRAFT)
+  data        Json
+  order       Int        @default(0)
+  createdById String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@unique([collection, slug])
+  @@index([collection, status])
+  @@index([collection, order])
+  @@map("collection_items")
+}
+
+// -----------------------------------------------------------------------------
+// Generic version history (settings + CMS pages). Keeps the last N snapshots
+// per entity for restore.
+// -----------------------------------------------------------------------------
+
+model Version {
+  id          String   @id @default(cuid())
+  entityType  String // "setting" | "page"
+  entityId    String // settings key, or page id
+  data        Json
+  label       String?
+  createdById String?
+  createdAt   DateTime @default(now())
+
+  @@index([entityType, entityId, createdAt])
+  @@map("versions")
+}
+
+// -----------------------------------------------------------------------------
+// Leads — submissions from every public form (contact, inquiry, newsletter,
+// sell, careers, area experts, etc.). Bitrix lead creation is added later with
+// the integrations; for now each lead is stored and emailed.
+// -----------------------------------------------------------------------------
+
+model Lead {
+  id        String   @id @default(cuid())
+  type      String // "newsletter" | "contact" | "sell" | "inquiry" | "career" | ...
+  name      String?
+  email     String?
+  phone     String?
+  message   String?
+  sourceUrl String?
+  reference String? // listing / agent / page reference
+  payload   Json?
+  ip        String?
+  handled   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([type, createdAt])
+  @@index([handled])
+  @@index([createdAt])
+  @@map("leads")
+}
+
+// -----------------------------------------------------------------------------
+// Login attempts — rate limiting / lockout (survives process restarts)
+// -----------------------------------------------------------------------------
+
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  email     String
+  ip        String   @default("")
+  success   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
+  @@index([ip, createdAt])
+  @@map("login_attempts")
+}

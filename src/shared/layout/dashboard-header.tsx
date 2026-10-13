@@ -1,9 +1,10 @@
 "use client"
 
+import Link from "next/link"
 import { Bell, Menu, Search } from "lucide-react"
 
 import type { AuthUser } from "@/features/auth/core/domain/entity"
-import { signOutAction } from "@/features/auth/services/auth-actions"
+import { logoutAction } from "@/features/auth/services/auth-actions"
 import { Avatar, AvatarFallback } from "@/shared/ui/avatar"
 import { BreadcrumbFromPath } from "@/shared/ui/breadcrumb"
 import { Button } from "@/shared/ui/button"
@@ -92,11 +93,11 @@ export function DashboardHeader({ user, onOpenMobileSidebar }: DashboardHeaderPr
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <a href="/dashboard/settings">Settings</a>
+              <Link href="/admin/settings">Settings</Link>
             </DropdownMenuItem>
             <DropdownMenuItem
               onSelect={() => {
-                void signOutAction()
+                void logoutAction()
               }}
             >
               Sign out

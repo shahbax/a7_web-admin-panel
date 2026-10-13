@@ -40,6 +40,15 @@ next-env.d.ts
 .eslintcache
 .turbo/
 
+# Local media uploads (served from UPLOADS_DIR; real files live outside the repo)
+/.uploads/
+
+# Playwright test artifacts (committed baselines live in e2e/**/*-snapshots/)
+/test-results/
+/playwright-report/
+/blob-report/
+/.playwright/
+
 # Vercel
 .vercel/
 
