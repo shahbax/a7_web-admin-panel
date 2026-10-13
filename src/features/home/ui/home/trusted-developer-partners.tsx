@@ -11,7 +11,9 @@ import { cn } from "@/shared/lib/cn"
 
 import "swiper/css"
 
-const DEVELOPERS = [
+type Partner = { name: string; logo: string }
+
+const DEVELOPERS: readonly Partner[] = [
   { name: "Emaar", logo: "/assets/developers/emaar.png" },
   { name: "Binghatti", logo: "/assets/developers/binghatti.png" },
   { name: "Dubai Properties", logo: "/assets/developers/dubai-properties.png" },
@@ -19,9 +21,6 @@ const DEVELOPERS = [
   { name: "Meraas", logo: "/assets/developers/meraas.png" },
   { name: "Azizi", logo: "/assets/developers/azizi.png" },
 ] as const
-
-/** Duplicated so loop + autoplay work when fewer logos than viewport slots. */
-const SLIDES = [...DEVELOPERS, ...DEVELOPERS]
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number]
 const VIEWPORT = { once: true, amount: 0.3 as const }
@@ -34,7 +33,15 @@ function startAutoplay(swiper: SwiperInstance) {
   }
 }
 
-export function TrustedDeveloperPartners({ className }: { className?: string }) {
+export function TrustedDeveloperPartners({
+  className,
+  partners = DEVELOPERS,
+}: {
+  className?: string
+  partners?: readonly Partner[]
+}) {
+  // Duplicated so loop + autoplay work when fewer logos than viewport slots.
+  const SLIDES = [...partners, ...partners]
   const swiperRef = useRef<SwiperInstance | null>(null)
   const containerRef = useRef<HTMLDivElement | null>(null)
 
