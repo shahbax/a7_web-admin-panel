@@ -105,78 +105,84 @@ export const SITE_DEFAULT_THEME: ProjectTheme = buildTheme(
   { preserveLogoColors: false }
 )
 
+/** Seed for a project theme: one brand colour (+ optional dark secondary) and a header logo. */
+export type ProjectThemeSeed = {
+  name: string
+  logoSrc: string
+  logoAlt: string
+  brandColor: string
+  secondary?: string
+}
+
 /**
  * Off-plan themes — change only `brandColor` (and optional `secondary`) per project.
- * Example: projectThemeFromColor(..., "#E07A5F", { secondary: "#1A3A4A" })
+ * These are the code defaults; the CMS project items carry the same values as
+ * `themeColor` / `themeSecondaryColor` / `themeLogoUrl` and override them.
  */
-export const PROJECT_THEMES: Record<string, ProjectTheme> = {
-  "damac-district": projectThemeFromColor(
-    "damac-district",
-    "Damac District",
-    "/assets/developers/azizi.png",
-    "Damac District",
-    "#C9A227"
-  ),
-
-  "the-hillgate": projectThemeFromColor(
-    "the-hillgate",
-    "The Hillgate",
-    "/assets/developers/binghatti.png",
-    "The Hillgate",
-    "#3B82C4"
-  ),
-
-  "baystar-by-vida": projectThemeFromColor(
-    "baystar-by-vida",
-    "Baystar by Vida",
-    "/assets/developers/dubai-properties.png",
-    "Baystar by Vida",
-    "#1A9B88"
-  ),
-
-  "silva-at-dubai-creek": projectThemeFromColor(
-    "silva-at-dubai-creek",
-    "Silva at Dubai Creek",
-    "/assets/developers/azizi.png",
-    "Silva at Dubai Creek",
-    "#C45C3E"
-  ),
-
-  "waldorf-astoria-residences": projectThemeFromColor(
-    "waldorf-astoria-residences",
-    "Waldorf Astoria Residences",
-    "/assets/developers/dubai-properties.png",
-    "Waldorf Astoria Residences",
-    "#1B3A6B"
-  ),
-
-  "palm-jumeirah-villas": projectThemeFromColor(
-    "palm-jumeirah-villas",
-    "Palm Jumeirah Signature Villas",
-    "/assets/developers/azizi.png",
-    "Palm Jumeirah Signature Villas",
-    "#E07A5F",
-    { secondary: "#1A3A4A" }
-  ),
-
-  "bvlgari-beachfront": projectThemeFromColor(
-    "bvlgari-beachfront",
-    "Bvlgari Beachfront",
-    "/assets/developers/dubai-properties.png",
-    "Bvlgari Beachfront",
-    "#1B2C5E",
-    { secondary: "#0D1A36" }
-  ),
-
-  "bugatti-residences-business-bay": projectThemeFromColor(
-    "bugatti-residences-business-bay",
-    "Bugatti Residences",
-    "/assets/developers/binghatti.png",
-    "Bugatti Residences",
-    "#C0A050",
-    { secondary: "#1A1A1A" }
-  ),
+export const PROJECT_THEME_SEEDS: Record<string, ProjectThemeSeed> = {
+  "damac-district": {
+    name: "Damac District",
+    logoSrc: "/assets/developers/azizi.png",
+    logoAlt: "Damac District",
+    brandColor: "#C9A227",
+  },
+  "the-hillgate": {
+    name: "The Hillgate",
+    logoSrc: "/assets/developers/binghatti.png",
+    logoAlt: "The Hillgate",
+    brandColor: "#3B82C4",
+  },
+  "baystar-by-vida": {
+    name: "Baystar by Vida",
+    logoSrc: "/assets/developers/dubai-properties.png",
+    logoAlt: "Baystar by Vida",
+    brandColor: "#1A9B88",
+  },
+  "silva-at-dubai-creek": {
+    name: "Silva at Dubai Creek",
+    logoSrc: "/assets/developers/azizi.png",
+    logoAlt: "Silva at Dubai Creek",
+    brandColor: "#C45C3E",
+  },
+  "waldorf-astoria-residences": {
+    name: "Waldorf Astoria Residences",
+    logoSrc: "/assets/developers/dubai-properties.png",
+    logoAlt: "Waldorf Astoria Residences",
+    brandColor: "#1B3A6B",
+  },
+  "palm-jumeirah-villas": {
+    name: "Palm Jumeirah Signature Villas",
+    logoSrc: "/assets/developers/azizi.png",
+    logoAlt: "Palm Jumeirah Signature Villas",
+    brandColor: "#E07A5F",
+    secondary: "#1A3A4A",
+  },
+  "bvlgari-beachfront": {
+    name: "Bvlgari Beachfront",
+    logoSrc: "/assets/developers/dubai-properties.png",
+    logoAlt: "Bvlgari Beachfront",
+    brandColor: "#1B2C5E",
+    secondary: "#0D1A36",
+  },
+  "bugatti-residences-business-bay": {
+    name: "Bugatti Residences",
+    logoSrc: "/assets/developers/binghatti.png",
+    logoAlt: "Bugatti Residences",
+    brandColor: "#C0A050",
+    secondary: "#1A1A1A",
+  },
 }
+
+/** Builds a full project theme from a seed (one brand colour → all tokens). */
+export function projectThemeFromSeed(id: string, seed: ProjectThemeSeed): ProjectTheme {
+  return projectThemeFromColor(id, seed.name, seed.logoSrc, seed.logoAlt, seed.brandColor, {
+    secondary: seed.secondary,
+  })
+}
+
+export const PROJECT_THEMES: Record<string, ProjectTheme> = Object.fromEntries(
+  Object.entries(PROJECT_THEME_SEEDS).map(([id, seed]) => [id, projectThemeFromSeed(id, seed)])
+)
 
 export function getProjectTheme(projectId: string): ProjectTheme | null {
   return PROJECT_THEMES[projectId] ?? null

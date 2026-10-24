@@ -1,4 +1,4 @@
-export {
-  listYourPropertyPageMetadata as metadata,
-  ListYourPropertyPageRoute as default,
-} from "@/features/services/pages/list-your-property-page"
+import { ListYourPropertyPageRoute, generateListYourPropertyMetadata } from "@/features/services/pages/list-your-property-page"
+
+export const generateMetadata = generateListYourPropertyMetadata
+export default ListYourPropertyPageRoute

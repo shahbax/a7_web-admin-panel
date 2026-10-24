@@ -1,1 +1,4 @@
-export { conveyancingPageMetadata as metadata, ConveyancingPageRoute as default } from "@/features/services/pages/conveyancing-page"
+import { ConveyancingPageRoute, generateConveyancingMetadata } from "@/features/services/pages/conveyancing-page"
+
+export const generateMetadata = generateConveyancingMetadata
+export default ConveyancingPageRoute

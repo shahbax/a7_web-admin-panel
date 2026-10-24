@@ -19,10 +19,12 @@ import { eventsPath } from "@/shared/lib/constants/routes"
 import { MARKETING_FEATURE_ICONS } from "@/shared/ui/marketing"
 
 type EventDetailPageProps = {
+  /** Developer prices & newsletter band (shared, editable in admin). */
+  newsletter?: typeof homeDeveloperCtaContent
   event: EventDetail
 }
 
-export function EventDetailPage({ event }: EventDetailPageProps) {
+export function EventDetailPage({ event, newsletter = homeDeveloperCtaContent }: EventDetailPageProps) {
   return (
     <main className="bg-[#02060C] text-white">
       <section className="relative">
@@ -125,7 +127,7 @@ export function EventDetailPage({ event }: EventDetailPageProps) {
           {event.juryTitle}
         </motion.h2>
         <p className="mx-auto mt-3 max-w-4xl text-center text-sm leading-relaxed text-white/70">
-          The jury awards shine a light on individuals and organisations whose achievements mirror remarkable growth.
+          {event.juryIntro}
         </p>
         <ul className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {event.juryMembers.map((member, index) => (
@@ -246,7 +248,7 @@ export function EventDetailPage({ event }: EventDetailPageProps) {
       />
 
       <MarketingContactSection {...event.contactSectionProps} className="bg-[#E7E8E8] py-10 md:py-12" />
-      <HomeDeveloperCtaNewsletter {...homeDeveloperCtaContent} />
+      <HomeDeveloperCtaNewsletter {...newsletter} />
 
     </main>
   )

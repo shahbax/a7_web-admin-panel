@@ -34,6 +34,14 @@ export function LeadRow({ lead }: { lead: LeadDTO }) {
     run(() => deleteLeadAction({}, fd))
   }
 
+  const { files: rawFiles, ...rest } = (lead.payload ?? {}) as { files?: unknown } & Record<string, unknown>
+  const files = Array.isArray(rawFiles)
+    ? (rawFiles as { name?: unknown; stored?: unknown }[]).filter(
+        (f): f is { name: string; stored: string } => typeof f.name === "string" && typeof f.stored === "string",
+      )
+    : []
+  const extra = Object.keys(rest).length > 0 ? rest : null
+
   return (
     <>
       <tr className="hover:bg-neutral-50">
@@ -69,7 +77,19 @@ export function LeadRow({ lead }: { lead: LeadDTO }) {
               {lead.reference ? <div><dt className="inline text-muted-foreground">Reference: </dt><dd className="inline">{lead.reference}</dd></div> : null}
               {lead.sourceUrl ? <div className="sm:col-span-2"><dt className="inline text-muted-foreground">Page: </dt><dd className="inline break-all">{lead.sourceUrl}</dd></div> : null}
               {lead.message ? <div className="sm:col-span-2"><dt className="text-muted-foreground">Message:</dt><dd className="mt-1 whitespace-pre-wrap">{lead.message}</dd></div> : null}
-              {lead.payload ? <div className="sm:col-span-2"><dt className="text-muted-foreground">Extra:</dt><dd className="mt-1"><pre className="overflow-x-auto rounded bg-neutral-100 p-2 text-xs">{JSON.stringify(lead.payload, null, 2)}</pre></dd></div> : null}
+              {files.length > 0 ? (
+                <div className="sm:col-span-2">
+                  <dt className="text-muted-foreground">Attachments:</dt>
+                  <dd className="mt-1 flex flex-wrap gap-2">
+                    {files.map((f) => (
+                      <a key={f.stored} href={`/api/admin/leads/file/${f.stored}?filename=${encodeURIComponent(f.name)}`} className="rounded border border-border bg-white px-2 py-1 text-xs hover:underline">
+                        {f.name}
+                      </a>
+                    ))}
+                  </dd>
+                </div>
+              ) : null}
+              {extra ? <div className="sm:col-span-2"><dt className="text-muted-foreground">Extra:</dt><dd className="mt-1"><pre className="overflow-x-auto rounded bg-neutral-100 p-2 text-xs">{JSON.stringify(extra, null, 2)}</pre></dd></div> : null}
             </dl>
           </td>
         </tr>

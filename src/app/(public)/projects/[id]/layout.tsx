@@ -1,1 +1,1 @@
-export { default } from "@/features/project/pages/project-detail-layout"
+export { default, generateProjectDetailStaticParams as generateStaticParams } from "@/features/project/pages/project-detail-layout"

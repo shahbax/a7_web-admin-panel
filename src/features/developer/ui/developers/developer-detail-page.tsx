@@ -14,10 +14,12 @@ import { DeveloperDetailHero } from "./developer-detail-hero"
 import { DeveloperDetailListingsShell } from "./developer-detail-listings-shell"
 
 type DeveloperDetailPageProps = {
+  /** Developer prices & newsletter band (shared, editable in admin). */
+  newsletter?: typeof homeDeveloperCtaContent
   developer: DeveloperDetail
 }
 
-export function DeveloperDetailPage({ developer }: DeveloperDetailPageProps) {
+export function DeveloperDetailPage({ developer, newsletter = homeDeveloperCtaContent }: DeveloperDetailPageProps) {
   const breadcrumbs = getDeveloperDetailBreadcrumbs(developer)
   const projects = getDeveloperOffPlanProjects(developer.id)
 
@@ -59,7 +61,7 @@ export function DeveloperDetailPage({ developer }: DeveloperDetailPageProps) {
         </div>
       </section>
 
-      <HomeDeveloperCtaNewsletter {...homeDeveloperCtaContent} />
+      <HomeDeveloperCtaNewsletter {...newsletter} />
     </>
   )
 }

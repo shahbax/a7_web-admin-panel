@@ -2,7 +2,10 @@
 
 import { CommunitySummaryCard } from "@/features/area/ui/areas/community-summary-card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs"
-import type { AgentProfileDetail } from "@/features/agent/core/domain/entity/agent.entity"
+import type {
+  AgentProfileCopy,
+  AgentProfileDetail,
+} from "@/features/agent/core/domain/entity/agent.entity"
 import type { AgentExpertiseArea } from "@/features/agent"
 import { areaDetailPath } from "@/shared/lib/constants/routes"
 import { cn } from "@/shared/lib/cn"
@@ -10,10 +13,11 @@ import { cn } from "@/shared/lib/cn"
 type AgentAreaExpertiseSectionProps = {
   agent: AgentProfileDetail
   areas: AgentExpertiseArea[]
+  copy: Pick<AgentProfileCopy, "areaExpertiseTitle" | "areaExpertiseDescription">
   className?: string
 }
 
-export function AgentAreaExpertiseSection({ agent, areas, className }: AgentAreaExpertiseSectionProps) {
+export function AgentAreaExpertiseSection({ agent, areas, copy, className }: AgentAreaExpertiseSectionProps) {
   const defaultTab = areas[0]?.id ?? "dubai-marina"
 
   return (
@@ -26,10 +30,10 @@ export function AgentAreaExpertiseSection({ agent, areas, className }: AgentArea
           id="agent-area-expertise-heading"
           className="font-heading text-2xl font-bold text-a7-black md:text-3xl"
         >
-          {agent.name} Areas of Expertise
+          {copy.areaExpertiseTitle.replaceAll("{name}", agent.name)}
         </h2>
         <p className="mt-2 text-sm text-a7-text-gray md:text-base">
-          Discover the neighborhoods where {agent.name} specialises and has extensive market knowledge.
+          {copy.areaExpertiseDescription.replaceAll("{name}", agent.name)}
         </p>
       </header>
 

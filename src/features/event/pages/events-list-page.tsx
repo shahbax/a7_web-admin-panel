@@ -1,13 +1,14 @@
 import type { Metadata } from "next"
 
 import { EventsPage } from "@/features/event/ui/events"
-import { EVENTS_PAGE_DESCRIPTION, EVENTS_PAGE_TITLE, eventsPageProps } from "@/features/event/content/events-page-content"
+import { loadEventBanners, loadEventsPageContent } from "@/features/event/services/event-content"
 
-export const eventsListMetadata: Metadata = {
-  title: `${EVENTS_PAGE_TITLE} | A Seven Properties`,
-  description: EVENTS_PAGE_DESCRIPTION,
+export async function generateEventsListMetadata(): Promise<Metadata> {
+  const { content } = await loadEventsPageContent()
+  return { title: content.seo.title, description: content.seo.description }
 }
 
-export function EventsListPage() {
-  return <EventsPage {...eventsPageProps} />
+export async function EventsListPage() {
+  const [{ content, layout }, events] = await Promise.all([loadEventsPageContent(), loadEventBanners()])
+  return <EventsPage content={content} layout={layout} events={events} />
 }

@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation"
 
 import { AgentTransactionsSection } from "@/features/agent/ui/agent-profile/agent-transactions-section"
-import { fetchAgentProfile, getAgentTransactions } from "@/features/agent"
+import { getAgentTransactions } from "@/features/agent"
+import { loadAgentProfile } from "@/features/agent/services/agent-content"
 
 type AgentProfileTransactionsPageProps = {
   params: Promise<{ id: string }>
@@ -9,7 +10,7 @@ type AgentProfileTransactionsPageProps = {
 
 export async function AgentProfileTransactionsPage({ params }: AgentProfileTransactionsPageProps) {
   const { id } = await params
-  const agent = await fetchAgentProfile(id)
+  const agent = await loadAgentProfile(id)
 
   if (!agent) {
     notFound()

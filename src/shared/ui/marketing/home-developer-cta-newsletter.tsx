@@ -14,6 +14,7 @@ import { useRef } from "react"
 import { Button } from "@/shared/ui/button"
 import { Input } from "@/shared/ui/input"
 import { cn } from "@/shared/lib/cn"
+import { useLeadSubmit } from "@/features/leads/ui/use-lead-submit"
 
 export type HomeDeveloperCtaNewsletterProps = {
   imageUrl: string
@@ -46,6 +47,7 @@ export function HomeDeveloperCtaNewsletter({
   const showSplitEyebrow = Boolean(heroEyebrowPercent && heroEyebrowLabel)
   const sectionRef = useRef<HTMLElement>(null)
   const prefersReducedMotion = useReducedMotion()
+  const newsletter = useLeadSubmit()
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -196,13 +198,19 @@ export function HomeDeveloperCtaNewsletter({
             </h3>
             <form
               className="mt-10 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:items-center sm:gap-2 sm:rounded-full sm:bg-a7-panel-surface sm:p-1.5"
-              onSubmit={(e) => e.preventDefault()}
+              onSubmit={(e) => {
+                e.preventDefault()
+                void newsletter.submit(e.currentTarget, { type: "newsletter" })
+              }}
             >
+              <input type="text" name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
               <Input
                 type="email"
                 name="email"
                 placeholder="Email address"
                 autoComplete="email"
+                required
+                disabled={newsletter.pending || newsletter.done}
                 radius="full"
                 className="h-12 border-0 bg-a7-panel-surface text-a7-black shadow-none focus-visible:ring-primary/30 sm:h-11 sm:flex-1 sm:bg-transparent"
               />
@@ -214,8 +222,14 @@ export function HomeDeveloperCtaNewsletter({
                 label={subscribeLabel}
                 iconRight={<ArrowUpRight className="size-4 text-black" strokeWidth={2.25} />}
                 className="h-12 shrink-0 px-8 sm:h-11"
+                disabled={newsletter.pending || newsletter.done}
               />
             </form>
+            {newsletter.done || newsletter.error ? (
+              <p role="status" className={cn("mt-4 text-sm", newsletter.error ? "text-destructive" : "text-a7-text-gray")}>
+                {newsletter.error ?? "Thank you — you're subscribed."}
+              </p>
+            ) : null}
           </div>
         </motion.div>
       </div>

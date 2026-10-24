@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useRef, useState, useEffect } from "react"
 import { addMonths, format, isValid, parse, startOfMonth } from "date-fns"
 import { CalendarDays, ChevronDown } from "lucide-react"
 import type { DateRange } from "react-day-picker"
@@ -109,7 +109,9 @@ export function DateRangePicker({
   const [startMonth, setStartMonth] = useState<Date>(() => new Date())
   const [endMonth, setEndMonth] = useState<Date>(() => addMonths(new Date(), 1))
   const pendingRangeRef = useRef<DateRange | undefined>(pendingRange)
-  pendingRangeRef.current = pendingRange
+  useEffect(() => {
+    pendingRangeRef.current = pendingRange
+  }, [pendingRange])
 
   const handleOpenChange = useCallback(
     (nextOpen: boolean) => {

@@ -1,1 +1,4 @@
-export { servicesPageMetadata as metadata, ServicesPageRoute as default } from "@/features/services/pages/services-page"
+import { ServicesPageRoute, generateServicesMetadata } from "@/features/services/pages/services-page"
+
+export const generateMetadata = generateServicesMetadata
+export default ServicesPageRoute

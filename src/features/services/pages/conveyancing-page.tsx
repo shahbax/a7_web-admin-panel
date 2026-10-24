@@ -1,17 +1,14 @@
 import type { Metadata } from "next"
 
 import { ConveyancingPage } from "@/features/services/ui/conveyancing"
-import {
-  getConveyancingPageContent,
-  CONVEYANCING_HERO_DESCRIPTION,
-  CONVEYANCING_PAGE_TITLE,
-} from "@/features/services/services/content"
+import { loadConveyancingContent } from "@/features/services/services/content"
 
-export const conveyancingPageMetadata: Metadata = {
-  title: `${CONVEYANCING_PAGE_TITLE} | A Seven Properties`,
-  description: CONVEYANCING_HERO_DESCRIPTION,
+export async function generateConveyancingMetadata(): Promise<Metadata> {
+  const { content } = await loadConveyancingContent()
+  return { title: content.seo.title, description: content.seo.description }
 }
 
-export function ConveyancingPageRoute() {
-  return <ConveyancingPage content={getConveyancingPageContent()} />
+export async function ConveyancingPageRoute() {
+  const { content, layout } = await loadConveyancingContent()
+  return <ConveyancingPage content={content} layout={layout} />
 }

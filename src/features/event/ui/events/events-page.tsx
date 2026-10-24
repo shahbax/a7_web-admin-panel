@@ -4,14 +4,16 @@ import { motion } from "framer-motion"
 
 import { HomeDeveloperCtaNewsletter } from "@/shared/ui/marketing/home-developer-cta-newsletter"
 import { MarketingFaqSection } from "@/shared/ui/marketing"
-import { homeDeveloperCtaContent } from "@/features/developer/services/content"
+import { renderSections } from "@/features/cms/site-content/core/sections"
+import type { SectionLayout } from "@/features/cms/site-content/core/types"
 import { cn } from "@/shared/lib/cn"
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number]
 const VIEWPORT = { once: true, amount: 0.08 as const }
 
 import { EventBannerListSection } from "./event-banner-list-section"
-import type { EventsPageProps } from "@/features/event/services/content"
+import type { EventBannerCardItem } from "./event-banner-card"
+import type { EventsPageContent } from "@/features/event/services/event-content"
 
 function EventsTopAreasSection({
   title,
@@ -52,19 +54,22 @@ function EventsTopAreasSection({
   )
 }
 
-export function EventsPage({
-  listSectionProps,
-  topAreasTitle,
-  topAreasSections,
-  faqSectionProps,
-  className,
-}: EventsPageProps & { className?: string }) {
+export type EventsPageProps = {
+  content: EventsPageContent
+  layout: SectionLayout
+  events: readonly EventBannerCardItem[]
+  className?: string
+}
+
+export function EventsPage({ content, layout, events, className }: EventsPageProps) {
   return (
     <main className={cn("bg-white", className)}>
-      <EventBannerListSection {...listSectionProps} />
-      <EventsTopAreasSection title={topAreasTitle} sections={topAreasSections} />
-      <MarketingFaqSection {...faqSectionProps} />
-      <HomeDeveloperCtaNewsletter {...homeDeveloperCtaContent} />
+      {renderSections(layout, {
+        list: <EventBannerListSection {...content.list} events={events} />,
+        topAreas: <EventsTopAreasSection title={content.topAreas.title} sections={content.topAreas.sections} />,
+        faq: <MarketingFaqSection {...content.faq} />,
+        newsletter: <HomeDeveloperCtaNewsletter {...content.newsletter} />,
+      })}
     </main>
   )
 }

@@ -1,17 +1,14 @@
 import type { Metadata } from "next"
 
 import { PropertySnaggingPage } from "@/features/services/ui/property-snagging"
-import {
-  getPropertySnaggingPageContent,
-  PROPERTY_SNAGGING_HERO_DESCRIPTION,
-  PROPERTY_SNAGGING_PAGE_TITLE,
-} from "@/features/services/services/content"
+import { loadPropertySnaggingContent } from "@/features/services/services/content"
 
-export const propertySnaggingPageMetadata: Metadata = {
-  title: `${PROPERTY_SNAGGING_PAGE_TITLE} | A Seven Properties`,
-  description: PROPERTY_SNAGGING_HERO_DESCRIPTION,
+export async function generatePropertySnaggingMetadata(): Promise<Metadata> {
+  const { content } = await loadPropertySnaggingContent()
+  return { title: content.seo.title, description: content.seo.description }
 }
 
-export function PropertySnaggingPageRoute() {
-  return <PropertySnaggingPage content={getPropertySnaggingPageContent()} />
+export async function PropertySnaggingPageRoute() {
+  const { content, layout } = await loadPropertySnaggingContent()
+  return <PropertySnaggingPage content={content} layout={layout} />
 }

@@ -20,7 +20,7 @@ export const HOME_NEWS_POSTS: readonly HomeNewsPost[] = [
       "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1200&auto=format&fit=crop",
     date: "05/05/2023",
     views: 205,
-    href: "#",
+    href: "/news/rent-dubai-practices",
     featured: true,
   },
   {
@@ -32,7 +32,7 @@ export const HOME_NEWS_POSTS: readonly HomeNewsPost[] = [
       "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1200&auto=format&fit=crop",
     date: "05/05/2023",
     views: 541,
-    href: "#",
+    href: "/news/al-furjan-market",
   },
   {
     id: "professional-snagging",
@@ -43,6 +43,6 @@ export const HOME_NEWS_POSTS: readonly HomeNewsPost[] = [
       "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1200&auto=format&fit=crop",
     date: "05/05/2023",
     views: 387,
-    href: "#",
+    href: "/news/professional-snagging",
   },
 ] as const

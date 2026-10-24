@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation"
 
 import { AgentOffPlanSection } from "@/features/agent/ui/agent-profile/agent-off-plan-section"
-import { fetchAgentProfile, getAgentOffPlanProjects } from "@/features/agent"
+import { getAgentOffPlanProjects } from "@/features/agent"
+import { loadAgentProfile } from "@/features/agent/services/agent-content"
 
 type AgentProfileOffPlanPageProps = {
   params: Promise<{ id: string }>
@@ -9,7 +10,7 @@ type AgentProfileOffPlanPageProps = {
 
 export async function AgentProfileOffPlanPage({ params }: AgentProfileOffPlanPageProps) {
   const { id } = await params
-  const agent = await fetchAgentProfile(id)
+  const agent = await loadAgentProfile(id)
 
   if (!agent) {
     notFound()

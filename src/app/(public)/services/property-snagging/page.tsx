@@ -1,4 +1,4 @@
-export {
-  propertySnaggingPageMetadata as metadata,
-  PropertySnaggingPageRoute as default,
-} from "@/features/services/pages/property-snagging-page"
+import { PropertySnaggingPageRoute, generatePropertySnaggingMetadata } from "@/features/services/pages/property-snagging-page"
+
+export const generateMetadata = generatePropertySnaggingMetadata
+export default PropertySnaggingPageRoute

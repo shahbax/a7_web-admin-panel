@@ -10,18 +10,24 @@ import { SwiperNavButtons } from "@/shared/ui/swiper-nav-buttons"
 import { useSwiperNav } from "@/shared/hooks/use-swiper-nav"
 import { cn } from "@/shared/lib/cn"
 import type { PropertyListing } from "@/features/property"
+import { HOME_FURNISHED_TEXTS } from "@/features/home/services/content"
 
 import "swiper/css"
 
 export type FurnishedLuxuryPropertiesProps = {
   listings: PropertyListing[]
+  title?: string
   className?: string
 }
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number]
 const VIEWPORT = { once: true, amount: 0.12 as const }
 
-export function FurnishedLuxuryProperties({ listings, className }: FurnishedLuxuryPropertiesProps) {
+export function FurnishedLuxuryProperties({
+  listings,
+  title = HOME_FURNISHED_TEXTS.title,
+  className,
+}: FurnishedLuxuryPropertiesProps) {
   const { prevClass, nextClass, swiperNavConfig } = useSwiperNav("furnished")
 
   if (listings.length === 0) return null
@@ -43,7 +49,7 @@ export function FurnishedLuxuryProperties({ listings, className }: FurnishedLuxu
     >
       <div className="relative container mx-auto px-4">
         <SectionHeader
-          title="Furnished Luxury Properties"
+          title={title}
           className="mb-8 sm:mb-10 sm:pr-28"
         />
 

@@ -7,7 +7,7 @@ import { CommunitySpotlightCard } from "@/features/area/ui/areas/community-spotl
 import { ListingPagination } from "@/shared/ui/listing-pagination"
 import {
   AREAS_PAGE_SIZE,
-  getAreasForPage,
+  type AreaCategory,
   type DubaiAreaListing,
 } from "@/features/area/services/content"
 import { propertiesListPath, areaDetailPath } from "@/shared/lib/constants/routes"
@@ -36,12 +36,14 @@ function AreaSpotlightCard({ area }: { area: DubaiAreaListing }) {
 }
 
 type AreasListingContentProps = {
+  /** Area cards, already in display order. */
+  areas: DubaiAreaListing[]
+  categories?: AreaCategory[]
   className?: string
 }
 
-export function AreasListingContent({ className }: AreasListingContentProps) {
+export function AreasListingContent({ areas, categories, className }: AreasListingContentProps) {
   const [page, setPage] = useState(1)
-  const areas = useMemo(() => getAreasForPage("popular"), [])
 
   const pageCount = Math.max(1, Math.ceil(areas.length / AREAS_PAGE_SIZE))
   const safePage = Math.min(page, pageCount)
@@ -56,7 +58,7 @@ export function AreasListingContent({ className }: AreasListingContentProps) {
       <div className="container mx-auto px-4 py-6 sm:px-6 md:py-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
           <aside className="w-full shrink-0 lg:sticky lg:top-24 lg:w-64 xl:w-72">
-            <AreasSidebar />
+            <AreasSidebar categories={categories} />
           </aside>
 
           <div className="min-w-0 flex-1 space-y-6">

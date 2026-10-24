@@ -8,6 +8,7 @@ import type { Prisma } from "@prisma/client"
 import { prisma } from "@/shared/lib/db/prisma"
 import { mergeContent, toEditable, type JsonValue } from "@/features/cms/site-content/core/merge"
 import { resolveLayout } from "@/features/cms/site-content/core/sections"
+import { contentShape } from "@/features/cms/site-content/core/shape"
 import type {
   ContentDefinitionInfo,
   SectionLayout,
@@ -63,7 +64,8 @@ async function storedFor(key: string): Promise<StoredContent> {
 export async function getContent<T>(key: string): Promise<T> {
   const def = requireDefinition(key)
   const stored = await storedFor(key)
-  return mergeContent(def.defaults() as T, stored.content)
+  const defaults = def.defaults()
+  return mergeContent(defaults as T, stored.content, contentShape(defaults))
 }
 
 /** Ordered, visible sections for a page. */
@@ -123,10 +125,12 @@ export async function getContentForEdit(key: string): Promise<ContentEditState |
   const doc = await prisma.contentDoc.findUnique({ where: { key } })
   const draft = asStored(doc?.draft)
   const defaults = def.defaults()
+  const shape = contentShape(defaults)
   return {
     info: toDefinitionInfo(def),
-    defaults: toEditable(defaults) ?? null,
-    value: toEditable(mergeContent(defaults, draft.content)) ?? null,
+    // Templates for "Add item": the learned shape, so empty lists can grow too.
+    defaults: toEditable(shape) ?? null,
+    value: toEditable(mergeContent(defaults, draft.content, shape)) ?? null,
     layout: resolveLayout(def.kind === "single" ? (def.sections ?? []) : [], draft.layout),
     hasUnpublishedChanges: !!doc && JSON.stringify(doc.draft) !== JSON.stringify(doc.published ?? {}),
     isCustomized: !!doc?.published && Object.keys(asStored(doc.published)).length > 0,
@@ -143,7 +147,7 @@ export async function saveContentDraft(
 ): Promise<void> {
   const def = requireDefinition(key)
   const defaults = def.defaults()
-  const content = toEditable(mergeContent(defaults, input.content)) ?? null
+  const content = toEditable(mergeContent(defaults, input.content, contentShape(defaults))) ?? null
   const draft: StoredContent = { content }
   if (def.kind === "single" && def.sections?.length) {
     draft.layout = resolveLayout(def.sections, input.layout)

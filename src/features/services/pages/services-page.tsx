@@ -1,17 +1,14 @@
 import type { Metadata } from "next"
 
 import { ServicesPage } from "@/features/services/ui/services"
-import {
-  getServicesPageContent,
-  SERVICES_PAGE_HERO_SUBTITLE,
-  SERVICES_PAGE_TITLE,
-} from "@/features/services/services/content"
+import { loadServicesContent } from "@/features/services/services/content"
 
-export const servicesPageMetadata: Metadata = {
-  title: `${SERVICES_PAGE_TITLE} | A Seven Properties`,
-  description: SERVICES_PAGE_HERO_SUBTITLE,
+export async function generateServicesMetadata(): Promise<Metadata> {
+  const { content } = await loadServicesContent()
+  return { title: content.seo.title, description: content.seo.description }
 }
 
-export function ServicesPageRoute() {
-  return <ServicesPage content={getServicesPageContent()} />
+export async function ServicesPageRoute() {
+  const { content, layout } = await loadServicesContent()
+  return <ServicesPage content={content} layout={layout} />
 }

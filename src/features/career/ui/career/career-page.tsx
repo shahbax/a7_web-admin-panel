@@ -16,24 +16,17 @@ import {
   MarketingImageTextSection,
 } from "@/shared/ui/marketing"
 import { Button } from "@/shared/ui/button"
-import {
-  CAREER_GALLERY_IMAGES,
-  CAREER_OPENINGS,
-  careerGrowthSectionProps,
-  careerHeroProps,
-  careerIntroSectionProps,
-  careerMidCtaBannerProps,
-  careerNewsletterProps,
-  careerTeamSectionProps,
-  careerWhyChooseSectionProps,
-} from "@/features/career/services/content"
+import { renderSections } from "@/features/cms/site-content/core/sections"
+import type { SectionLayout } from "@/features/cms/site-content/core/types"
+import type { CareerOpening } from "@/features/career/services/content"
+import type { CareerPageContent } from "@/features/career/services/career-content"
 
-function CareerGallerySection() {
+function CareerGallerySection({ images }: { images: readonly string[] }) {
   return (
     <section className="bg-white pb-10 md:pb-14" aria-label="Career highlights gallery">
       <div className="container mx-auto px-4">
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
-          {CAREER_GALLERY_IMAGES.map((imageUrl, idx) => (
+          {images.map((imageUrl, idx) => (
             <motion.li
               key={imageUrl}
               className="relative aspect-4/3 overflow-hidden rounded-xl"
@@ -57,7 +50,13 @@ function CareerGallerySection() {
   )
 }
 
-function CareerOpeningsSection() {
+function CareerOpeningsSection({
+  content,
+  openings,
+}: {
+  content: CareerPageContent["openings"]
+  openings: readonly CareerOpening[]
+}) {
   return (
     <section id="open-roles" className="bg-white pb-12 md:pb-16" aria-labelledby="career-openings-heading">
       <div className="container mx-auto px-4">
@@ -69,10 +68,10 @@ function CareerOpeningsSection() {
           viewport={VIEWPORT}
           transition={{ duration: 0.8, ease: EASE }}
         >
-          Find the right job for you
+          {content.title}
         </motion.h2>
         <ul className="mt-6 border-t border-border">
-          {CAREER_OPENINGS.map((opening, index) => (
+          {openings.map((opening, index) => (
             <motion.li
               key={opening.id}
               className="grid grid-cols-1 items-center gap-3 border-b border-border py-3 md:grid-cols-[minmax(0,1fr)_auto_auto] md:gap-6 md:py-4"
@@ -94,7 +93,7 @@ function CareerOpeningsSection() {
                 className="h-10 w-fit px-5 text-xs font-semibold text-a7-black md:justify-self-end md:text-sm"
               >
                 <Link href={opening.href} className="inline-flex items-center gap-1.5">
-                  View Job Details
+                  {content.buttonLabel}
                   <ArrowUpRight className="size-3.5" aria-hidden />
                 </Link>
               </Button>
@@ -102,26 +101,34 @@ function CareerOpeningsSection() {
           ))}
         </ul>
         <p className="mt-4 text-center text-xs text-a7-text-gray md:text-sm">
-          <span className="font-semibold text-a7-black">Nothing quite right for you?</span>{" "}
-          Experience stress-free property management with confidence. Our experienced team handles everything.
+          <span className="font-semibold text-a7-black">{content.footerLead}</span>{" "}
+          {content.footerText}
         </p>
       </div>
     </section>
   )
 }
 
-export function CareerPage() {
+type CareerPageProps = {
+  content: CareerPageContent
+  layout: SectionLayout
+  openings: readonly CareerOpening[]
+}
+
+export function CareerPage({ content, layout, openings }: CareerPageProps) {
   return (
     <main className="bg-white">
-      <MarketingHeroSection {...careerHeroProps} className="min-h-[min(24rem,64svh)]" />
-      <MarketingImageTextSection {...careerIntroSectionProps} />
-      <CareerGallerySection />
-      <MarketingBenefitsGridSection {...careerWhyChooseSectionProps} />
-      <MarketingImageTextSection {...careerTeamSectionProps} />
-      <MarketingCtaBannerSection {...careerMidCtaBannerProps} />
-      <MarketingImageTextSection {...careerGrowthSectionProps} />
-      <CareerOpeningsSection />
-      <HomeDeveloperCtaNewsletter {...careerNewsletterProps} />
+      {renderSections(layout, {
+        hero: <MarketingHeroSection {...content.hero} className="min-h-[min(24rem,64svh)]" />,
+        intro: <MarketingImageTextSection {...content.intro} />,
+        gallery: <CareerGallerySection images={content.gallery} />,
+        whyChoose: <MarketingBenefitsGridSection {...content.whyChoose} />,
+        team: <MarketingImageTextSection {...content.team} />,
+        midCta: <MarketingCtaBannerSection {...content.midCta} />,
+        growth: <MarketingImageTextSection {...content.growth} />,
+        openings: <CareerOpeningsSection content={content.openings} openings={openings} />,
+        newsletter: <HomeDeveloperCtaNewsletter {...content.newsletter} />,
+      })}
     </main>
   )
 }

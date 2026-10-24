@@ -1,6 +1,8 @@
+import { cache } from "react"
 import { redirect } from "next/navigation"
 
 import { auth } from "@/auth"
+import { prisma } from "@/shared/lib/db/prisma"
 import {
   type AuthUser,
   type Role,
@@ -8,6 +10,14 @@ import {
   canManageUsers,
   roleAtLeast,
 } from "@/features/auth/core/domain/entity"
+
+const loadActiveUser = cache(async (id: string) => {
+  const user = await prisma.user.findUnique({
+    where: { id },
+    select: { id: true, email: true, name: true, role: true, isActive: true },
+  })
+  return user?.isActive ? user : null
+})
 
 /**
  * Server-side session accessor. Returns the signed-in admin user, or null.
@@ -20,11 +30,15 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   if (!session?.user?.id || !session.user.email || !session.user.role) {
     return null
   }
+  // The session is a signed token; re-read the account so deactivation, deletion
+  // and role changes take effect immediately rather than when the token expires.
+  const dbUser = await loadActiveUser(session.user.id)
+  if (!dbUser) return null
   return {
-    id: session.user.id,
-    email: session.user.email,
-    name: session.user.name ?? session.user.email,
-    role: session.user.role,
+    id: dbUser.id,
+    email: dbUser.email,
+    name: dbUser.name,
+    role: dbUser.role,
   }
 }
 

@@ -164,6 +164,7 @@ export type EventDetail = {
   storyParagraphs: readonly string[]
   storyCtaLabel: string
   juryTitle: string
+  juryIntro: string
   juryMembers: readonly EventDetailJuryMember[]
   categoriesTitle: string
   categoriesSubtitle: string
@@ -304,6 +305,8 @@ export const EVENT_DETAILS: Record<string, EventDetail> = Object.fromEntries(
       ] as const,
       storyCtaLabel: "Enquire Now",
       juryTitle: "A7 Agency & Agent Awards 2025 - Jury",
+      juryIntro:
+        "The jury awards shine a light on individuals and organisations whose achievements mirror remarkable growth.",
       juryMembers: DEFAULT_JURY_MEMBERS,
       categoriesTitle: "Award Categories",
       categoriesSubtitle: "Spot true winners across every stage of the property journey.",

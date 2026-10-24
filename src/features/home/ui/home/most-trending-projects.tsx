@@ -10,17 +10,20 @@ import { Button } from "@/shared/ui/button"
 import { HOME_OFFPLAN_SECTION_CLASS } from "@/shared/lib/constants/home.constants"
 import { cn } from "@/shared/lib/cn"
 import type { Property } from "@/features/property"
+import { HOME_TRENDING_PROJECTS_TEXTS } from "@/features/home/services/content"
 
 export type MostTrendingProjectsProps = {
   properties: Property[]
   viewAllHref?: string
+  title?: string
+  viewAllLabel?: string
   className?: string
 }
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number]
 const VIEWPORT = { once: true, amount: 0.1 as const }
 
-function ViewAllButton({ href }: { href: string }) {
+function ViewAllButton({ href, label }: { href: string; label: string }) {
   return (
     <Link href={href} className="shrink-0">
       <Button
@@ -28,7 +31,7 @@ function ViewAllButton({ href }: { href: string }) {
         variant="default"
         shape="pill"
         size="sm"
-        label="View All"
+        label={label}
         iconRight={<ArrowUpRight className="size-4 text-black" strokeWidth={2.25} />}
         className="px-6"
       />
@@ -38,7 +41,9 @@ function ViewAllButton({ href }: { href: string }) {
 
 export function MostTrendingProjects({
   properties,
-  viewAllHref = "/properties",
+  viewAllHref = HOME_TRENDING_PROJECTS_TEXTS.viewAllHref,
+  title = HOME_TRENDING_PROJECTS_TEXTS.title,
+  viewAllLabel = HOME_TRENDING_PROJECTS_TEXTS.viewAllLabel,
   className,
 }: MostTrendingProjectsProps) {
   if (properties.length === 0) return null
@@ -50,11 +55,11 @@ export function MostTrendingProjects({
     >
       <div className="container mx-auto px-4">
         <SectionHeader
-          title="Most Trending Projects in Dubai"
+          title={title}
           className="mb-8 sm:mb-10 [&_h2]:text-white"
           action={
             <div className="hidden sm:block">
-              <ViewAllButton href={viewAllHref} />
+              <ViewAllButton href={viewAllHref} label={viewAllLabel} />
             </div>
           }
         />
@@ -74,7 +79,7 @@ export function MostTrendingProjects({
         </div>
 
         <div className="mt-8 flex justify-center sm:hidden">
-          <ViewAllButton href={viewAllHref} />
+          <ViewAllButton href={viewAllHref} label={viewAllLabel} />
         </div>
       </div>
     </section>

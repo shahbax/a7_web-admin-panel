@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useRef, useState, useEffect } from "react"
 import { format, parse } from "date-fns"
 
 import { ClockIcon } from "@/shared/icons"
@@ -64,7 +64,9 @@ export function TimePicker({
   const [open, setOpen] = useState(false)
   const [pendingTime, setPendingTime] = useState("")
   const pendingTimeRef = useRef(pendingTime)
-  pendingTimeRef.current = pendingTime
+  useEffect(() => {
+    pendingTimeRef.current = pendingTime
+  }, [pendingTime])
 
   const handleOpenChange = useCallback(
     (nextOpen: boolean) => {

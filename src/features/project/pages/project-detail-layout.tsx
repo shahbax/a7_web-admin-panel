@@ -1,26 +1,27 @@
 import { notFound } from "next/navigation"
 
-import { getProjectTheme, ThemeScope, ThemeSync } from "@/shared/theme"
-import { getProjectDetail } from "@/features/project"
+import { ThemeScope, ThemeSync } from "@/shared/theme"
+import { loadSecondaryProject, loadSecondaryProjectIds } from "@/features/project/services/project-content"
 
 type ProjectDetailLayoutProps = {
   children: React.ReactNode
   params: Promise<{ id: string }>
 }
 
+export async function generateProjectDetailStaticParams() {
+  const ids = await loadSecondaryProjectIds()
+  return ids.map((id) => ({ id }))
+}
+
 export default async function ProjectDetailLayout({ children, params }: ProjectDetailLayoutProps) {
   const { id } = await params
-  const project = getProjectDetail(id)
+  const loaded = await loadSecondaryProject(id)
 
-  if (!project) {
+  if (!loaded) {
     notFound()
   }
 
-  const theme = getProjectTheme(id)
-
-  if (!theme) {
-    notFound()
-  }
+  const { theme } = loaded
 
   return (
     <>

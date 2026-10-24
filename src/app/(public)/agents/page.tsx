@@ -1,4 +1,4 @@
-import { agentsListMetadata, AgentsListPage } from "@/features/agent/pages/agents-list-page"
+import { generateAgentsListMetadata, AgentsListPage } from "@/features/agent/pages/agents-list-page"
 
-export const metadata = agentsListMetadata
+export const generateMetadata = generateAgentsListMetadata
 export default AgentsListPage

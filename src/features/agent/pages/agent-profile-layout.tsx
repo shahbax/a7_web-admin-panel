@@ -10,8 +10,11 @@ import {
 import { HomeDeveloperCtaNewsletter } from "@/shared/ui/marketing/home-developer-cta-newsletter"
 import { AgentProfileFullPageSkeleton } from "@/shared/ui/skeletons"
 import { BreadcrumbList } from "@/shared/ui/breadcrumb"
-import { homeDeveloperCtaContent } from "@/features/developer/content/developer-cta-content"
-import { fetchAgentProfile } from "@/features/agent"
+import {
+  loadAgentProfile,
+  loadAgentProfileIds,
+  loadAgentsPageContent,
+} from "@/features/agent/services/agent-content"
 import { agentProfilePath, agentsPath } from "@/shared/lib/constants/routes"
 
 type AgentProfileLayoutProps = {
@@ -21,7 +24,7 @@ type AgentProfileLayoutProps = {
 
 async function AgentProfileLayoutContent({ children, params }: AgentProfileLayoutProps) {
   const { id } = await params
-  const agent = await fetchAgentProfile(id)
+  const [agent, { content }] = await Promise.all([loadAgentProfile(id), loadAgentsPageContent()])
 
   if (!agent) {
     notFound()
@@ -51,11 +54,16 @@ async function AgentProfileLayoutContent({ children, params }: AgentProfileLayou
       </div>
 
       <HomeDeveloperCtaNewsletter
-        {...homeDeveloperCtaContent}
+        {...content.newsletter}
         contactHref={`${agentProfilePath(agent.id)}/contact`}
       />
     </AgentProfileProvider>
   )
+}
+
+export async function generateAgentProfileStaticParams() {
+  const ids = await loadAgentProfileIds()
+  return ids.map((id) => ({ id }))
 }
 
 export default function AgentProfileLayout({ children, params }: AgentProfileLayoutProps) {

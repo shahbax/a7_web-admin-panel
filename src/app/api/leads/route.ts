@@ -15,7 +15,8 @@ export async function POST(request: NextRequest) {
     for (const [k, v] of Object.entries(body)) form.set(k, String(v ?? ""))
   } else {
     const incoming = await request.formData()
-    for (const [k, v] of incoming.entries()) form.set(k, typeof v === "string" ? v : "")
+    // Files are only kept for career applications (CVs); see storeLeadFiles.
+    for (const [k, v] of incoming.entries()) form.append(k, v)
   }
 
   const result = await submitLeadAction({}, form)

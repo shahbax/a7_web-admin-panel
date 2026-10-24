@@ -1,26 +1,27 @@
 import { notFound } from "next/navigation"
 
-import { getProjectTheme, ThemeScope, ThemeSync } from "@/shared/theme"
-import { getOffPlanProjectDetail } from "@/features/project"
+import { ThemeScope, ThemeSync } from "@/shared/theme"
+import { loadOffPlanProject, loadOffPlanProjectIds } from "@/features/project/services/project-content"
 
 type OffPlanDetailLayoutProps = {
   children: React.ReactNode
   params: Promise<{ id: string }>
 }
 
+export async function generateOffPlanDetailStaticParams() {
+  const ids = await loadOffPlanProjectIds()
+  return ids.map((id) => ({ id }))
+}
+
 export default async function OffPlanDetailLayout({ children, params }: OffPlanDetailLayoutProps) {
   const { id } = await params
-  const project = getOffPlanProjectDetail(id)
+  const loaded = await loadOffPlanProject(id)
 
-  if (!project) {
+  if (!loaded) {
     notFound()
   }
 
-  const theme = getProjectTheme(id)
-
-  if (!theme) {
-    notFound()
-  }
+  const { theme } = loaded
 
   return (
     <>

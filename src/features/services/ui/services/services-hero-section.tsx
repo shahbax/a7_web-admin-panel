@@ -17,7 +17,7 @@ export function ServicesHeroSection({ hero, className }: ServicesHeroSectionProp
       description={hero.subtitle}
       imageUrl={hero.imageUrl}
       imageClassName="object-cover object-[center_25%]"
-      cta={{ label: "Enquiry Now", href: "#services-contact" }}
+      cta={hero.cta}
     />
   )
 }

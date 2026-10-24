@@ -7,10 +7,14 @@ import { PropertyCardListingHorizontal } from "@/features/property/ui/property-c
 import { Button } from "@/shared/ui/button"
 import { cn } from "@/shared/lib/cn"
 import type { PropertyListing } from "@/features/property"
+import { HOME_TRENDING_VILLAS_TEXTS } from "@/features/home/services/content"
 
 export type TrendingLuxuryVillasProps = {
   listings: PropertyListing[]
   viewAllHref?: string
+  kicker?: string
+  title?: string
+  viewAllLabel?: string
   className?: string
 }
 
@@ -19,7 +23,10 @@ const VIEWPORT = { once: true, amount: 0.1 as const }
 
 export function TrendingLuxuryVillas({
   listings,
-  viewAllHref = "/properties",
+  viewAllHref = HOME_TRENDING_VILLAS_TEXTS.ctaHref,
+  kicker = HOME_TRENDING_VILLAS_TEXTS.kicker,
+  title = HOME_TRENDING_VILLAS_TEXTS.title,
+  viewAllLabel = HOME_TRENDING_VILLAS_TEXTS.ctaLabel,
   className,
 }: TrendingLuxuryVillasProps) {
   if (listings.length === 0) return null
@@ -38,9 +45,9 @@ export function TrendingLuxuryVillas({
             viewport={VIEWPORT}
             transition={{ duration: 0.95, ease: EASE }}
           >
-            <p className="text-sm font-semibold uppercase tracking-[0.12em] text-white/60">Most Trending</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.12em] text-white/60">{kicker}</p>
             <h2 className="mt-3 font-heading text-[clamp(2rem,4.2vw,3rem)] font-semibold leading-[1.08] tracking-tight text-white md:text-[48px]">
-              Dubai&apos;s Most Trending Luxury Villas
+              {title}
             </h2>
             <Link href={viewAllHref} className="mt-8 inline-block">
               <Button
@@ -48,7 +55,7 @@ export function TrendingLuxuryVillas({
                 variant="default"
                 shape="pill"
                 size="sm"
-                label="All Trending Properties"
+                label={viewAllLabel}
                 className="px-7"
               />
             </Link>

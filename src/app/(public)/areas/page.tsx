@@ -1,4 +1,4 @@
-import { areasListMetadata, AreasListPage } from "@/features/area/pages/areas-list-page"
+import { AreasListPage, generateAreasListMetadata } from "@/features/area/pages/areas-list-page"
 
-export const metadata = areasListMetadata
+export const generateMetadata = generateAreasListMetadata
 export default AreasListPage

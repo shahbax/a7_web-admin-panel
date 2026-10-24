@@ -8,6 +8,7 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import { motion } from "framer-motion"
 
 import { cn } from "@/shared/lib/cn"
+import { HOME_DEVELOPER_PARTNERS_TEXTS } from "@/features/home/services/content"
 
 import "swiper/css"
 
@@ -36,9 +37,11 @@ function startAutoplay(swiper: SwiperInstance) {
 export function TrustedDeveloperPartners({
   className,
   partners = DEVELOPERS,
+  title = HOME_DEVELOPER_PARTNERS_TEXTS.title,
 }: {
   className?: string
   partners?: readonly Partner[]
+  title?: string
 }) {
   // Duplicated so loop + autoplay work when fewer logos than viewport slots.
   const SLIDES = [...partners, ...partners]
@@ -80,7 +83,7 @@ export function TrustedDeveloperPartners({
           viewport={VIEWPORT}
           transition={{ duration: 0.8, ease: EASE }}
         >
-          Trusted Partner of the Most Prominent Developers
+          {title}
         </motion.p>
 
         <motion.div

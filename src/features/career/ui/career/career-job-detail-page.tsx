@@ -15,10 +15,12 @@ import { careerPath } from "@/shared/lib/constants/routes"
 import { CareerJobApplicationCard } from "./career-job-application-card"
 
 type CareerJobDetailPageProps = {
+  /** Developer prices & newsletter band (shared, editable in admin). */
+  newsletter?: typeof homeDeveloperCtaContent
   job: CareerJobDetail
 }
 
-export function CareerJobDetailPage({ job }: CareerJobDetailPageProps) {
+export function CareerJobDetailPage({ job, newsletter = homeDeveloperCtaContent }: CareerJobDetailPageProps) {
   return (
     <main>
       <section className="container mx-auto px-4 py-4 md:py-6">
@@ -88,11 +90,11 @@ export function CareerJobDetailPage({ job }: CareerJobDetailPageProps) {
             </article>
 
             <aside className="lg:sticky lg:top-24 lg:self-start">
-              <CareerJobApplicationCard manager={job.manager} />
+              <CareerJobApplicationCard manager={job.manager} reference={job.title} />
             </aside>
           </div>
       </section>
-      <HomeDeveloperCtaNewsletter {...homeDeveloperCtaContent} />
+      <HomeDeveloperCtaNewsletter {...newsletter} />
     </main>
   )
 }

@@ -6,7 +6,7 @@ import { PropertyDetailMobileCtaBar } from "@/features/property/ui/property-deta
 import { PropertyHeroSection } from "@/features/property/ui/property-detail/property-hero-section"
 import { PropertyInquirySection } from "@/features/property/ui/property-detail/property-inquiry-section"
 import { PropertyInfoPanelSection } from "@/features/property/ui/property-detail/property-info-panel-section"
-import { detailDeveloperCtaContent } from "@/features/developer/content/developer-cta-content"
+import { loadDeveloperCtaContent } from "@/features/home/services/shared-cta-content"
 import { getPropertyListingDetail } from "@/features/property/core/data/mocks/property-listing-details"
 
 type PropertyDetailPageProps = {
@@ -32,7 +32,7 @@ export async function PropertyDetailPage({ params }: PropertyDetailPageProps) {
         dldPermitNumber={property.dldPermitNumber}
       />
       <PropertyInquirySection property={property} />
-      <HomeDeveloperCtaNewsletter {...detailDeveloperCtaContent} />
+      <HomeDeveloperCtaNewsletter {...(await loadDeveloperCtaContent()).detail} />
       <PropertyDetailMobileCtaBar property={property} />
     </main>
   )

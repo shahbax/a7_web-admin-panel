@@ -3,14 +3,21 @@ import {
   DEVELOPERS_PAGE_FAQ_ITEMS,
   DEVELOPERS_PAGE_FAQ_TITLE,
 } from "@/features/developer/services/content"
+import type { ProjectFaqItem } from "@/features/property"
 import { cn } from "@/shared/lib/cn"
 
 type DevelopersFaqSectionProps = {
+  title?: string
+  items?: readonly ProjectFaqItem[]
   className?: string
 }
 
-export function DevelopersFaqSection({ className }: DevelopersFaqSectionProps) {
-  const accordionItems = DEVELOPERS_PAGE_FAQ_ITEMS.map((item, index) => ({
+export function DevelopersFaqSection({
+  title = DEVELOPERS_PAGE_FAQ_TITLE,
+  items = DEVELOPERS_PAGE_FAQ_ITEMS,
+  className,
+}: DevelopersFaqSectionProps) {
+  const accordionItems = items.map((item, index) => ({
     title: item.title,
     content: item.content,
     value: `developers-faq-${index + 1}`,
@@ -26,7 +33,7 @@ export function DevelopersFaqSection({ className }: DevelopersFaqSectionProps) {
           id="developers-faq-heading"
           className="font-heading text-2xl font-bold text-a7-black md:text-3xl lg:text-[2rem]"
         >
-          {DEVELOPERS_PAGE_FAQ_TITLE}
+          {title}
         </h2>
 
         <AccordionList

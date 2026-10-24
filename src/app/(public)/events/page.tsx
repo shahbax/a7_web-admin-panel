@@ -1,4 +1,4 @@
-import { eventsListMetadata, EventsListPage } from "@/features/event/pages/events-list-page"
+import { EventsListPage, generateEventsListMetadata } from "@/features/event/pages/events-list-page"
 
-export const metadata = eventsListMetadata
+export const generateMetadata = generateEventsListMetadata
 export default EventsListPage

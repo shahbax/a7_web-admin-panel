@@ -1,17 +1,14 @@
 import type { Metadata } from "next"
 
 import { MortgagesPage } from "@/features/services/ui/mortgages"
-import {
-  getMortgagesPageContent,
-  MORTGAGES_HERO_DESCRIPTION,
-  MORTGAGES_PAGE_TITLE,
-} from "@/features/services/services/content"
+import { loadMortgagesContent } from "@/features/services/services/content"
 
-export const mortgagesPageMetadata: Metadata = {
-  title: `${MORTGAGES_PAGE_TITLE} | A Seven Properties`,
-  description: MORTGAGES_HERO_DESCRIPTION,
+export async function generateMortgagesMetadata(): Promise<Metadata> {
+  const { content } = await loadMortgagesContent()
+  return { title: content.seo.title, description: content.seo.description }
 }
 
-export function MortgagesPageRoute() {
-  return <MortgagesPage content={getMortgagesPageContent()} />
+export async function MortgagesPageRoute() {
+  const { content, layout } = await loadMortgagesContent()
+  return <MortgagesPage content={content} layout={layout} />
 }

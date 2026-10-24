@@ -1,1 +1,4 @@
-export { mortgagesPageMetadata as metadata, MortgagesPageRoute as default } from "@/features/services/pages/mortgages-page"
+import { MortgagesPageRoute, generateMortgagesMetadata } from "@/features/services/pages/mortgages-page"
+
+export const generateMetadata = generateMortgagesMetadata
+export default MortgagesPageRoute

@@ -1,17 +1,14 @@
 import type { Metadata } from "next"
 
 import { PlotsPage } from "@/features/services/ui/plots"
-import {
-  getPlotsPageContent,
-  PLOTS_HERO_DESCRIPTION,
-  PLOTS_PAGE_TITLE,
-} from "@/features/services/services/content"
+import { loadPlotsContent } from "@/features/services/services/content"
 
-export const plotsPageMetadata: Metadata = {
-  title: `${PLOTS_PAGE_TITLE} | A Seven Properties`,
-  description: PLOTS_HERO_DESCRIPTION,
+export async function generatePlotsMetadata(): Promise<Metadata> {
+  const { content } = await loadPlotsContent()
+  return { title: content.seo.title, description: content.seo.description }
 }
 
-export function PlotsPageRoute() {
-  return <PlotsPage content={getPlotsPageContent()} />
+export async function PlotsPageRoute() {
+  const { content, layout } = await loadPlotsContent()
+  return <PlotsPage content={content} layout={layout} />
 }

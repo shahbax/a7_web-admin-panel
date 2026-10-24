@@ -9,34 +9,38 @@ import {
   MarketingStepCardsSection,
   ServiceMarketingPageLayout,
 } from "@/shared/ui/marketing"
+import type { SectionLayout } from "@/features/cms/site-content/core/types"
 import type { PlotsPageContent } from "@/features/services/services/content"
 
 export type PlotsPageProps = {
   content: PlotsPageContent
+  layout?: SectionLayout
 }
 
-export function PlotsPage({ content }: PlotsPageProps) {
+export function PlotsPage({ content, layout }: PlotsPageProps) {
   return (
     <ServiceMarketingPageLayout
-      hero={<MarketingHeroSection {...content.heroProps} />}
+      layout={layout}
+      hero={<MarketingHeroSection {...content.hero} />}
       intro={
         <>
           <MarketingBreadcrumbsBand items={content.breadcrumbs} />
-          <MarketingBenefitsGridSection {...content.whyChooseSectionProps} />
+          <MarketingBenefitsGridSection {...content.whyChoose} />
         </>
       }
-      grid={<MarketingAudienceChecklistSection {...content.audienceSectionProps} />}
+      grid={<MarketingAudienceChecklistSection {...content.audience} />}
       afterGrid={
         <>
-          <MarketingPlotsListingsSection {...content.listingsSectionProps} />
-          <MarketingStepCardsSection {...content.howItWorksSectionProps} />
-          <MarketingMarketInsightsSection {...content.marketInsightsSectionProps} />
-          <MarketingDualCtaImageTextSection {...content.legacySectionProps} />
+          <MarketingPlotsListingsSection {...content.listings} />
+          <MarketingStepCardsSection {...content.howItWorks} />
+          <MarketingMarketInsightsSection {...content.marketInsights} />
+          <MarketingDualCtaImageTextSection {...content.legacy} />
         </>
       }
-      testimonialsSectionProps={content.testimonialsSectionProps}
-      faqSectionProps={content.faqSectionProps}
-      contactSectionProps={content.contactSectionProps}
+      testimonialsSectionProps={content.testimonials}
+      faqSectionProps={content.faq}
+      contactSectionProps={content.contact}
+      newsletterProps={content.newsletter}
     />
   )
 }

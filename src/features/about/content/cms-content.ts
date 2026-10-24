@@ -16,7 +16,7 @@ import {
 } from "@/features/about/content/about-page-content"
 
 export function getAboutDefaults() {
-  const { breadcrumbs: _breadcrumbs, ...trust } = aboutTrustSectionProps
+  const trust = { ...aboutTrustSectionProps, breadcrumbs: undefined }
   return {
     seo: { title: `${ABOUT_PAGE_TITLE} | A Seven Properties`, description: ABOUT_PAGE_DESCRIPTION },
     hero: aboutHeroProps,

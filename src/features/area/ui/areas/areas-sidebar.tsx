@@ -15,7 +15,11 @@ import {
   Users01Icon,
 } from "@/shared/icons"
 import type { IconProps } from "@/shared/icons/types"
-import { AREA_CATEGORIES, type AreaCategorySlug } from "@/features/area/services/content"
+import {
+  AREA_CATEGORIES,
+  type AreaCategory,
+  type AreaCategorySlug,
+} from "@/features/area/services/content"
 import { cn } from "@/shared/lib/cn"
 
 type CategoryIcon = ComponentType<IconProps>
@@ -33,12 +37,15 @@ const CATEGORY_ICONS: Record<AreaCategorySlug, CategoryIcon | "flame"> = {
 }
 
 type AreasSidebarProps = {
+  categories?: AreaCategory[]
   className?: string
 }
 
 function renderCategoryIcon(slug: AreaCategorySlug, isActive: boolean) {
   const iconClass = cn("shrink-0", isActive ? "text-white" : "text-a7-black")
   const icon = CATEGORY_ICONS[slug]
+
+  if (!icon) return null
 
   if (icon === "flame") {
     return <Flame className={cn("size-6", iconClass)} strokeWidth={1.5} aria-hidden />
@@ -51,11 +58,11 @@ function renderCategoryIcon(slug: AreaCategorySlug, isActive: boolean) {
 const ACTIVE_CATEGORY: AreaCategorySlug = "popular"
 
 /** Static category list (display only — categories don't filter). */
-export function AreasSidebar({ className }: AreasSidebarProps) {
+export function AreasSidebar({ categories = AREA_CATEGORIES, className }: AreasSidebarProps) {
 
   return (
     <nav className={cn("flex flex-col gap-2", className)} aria-label="Area categories">
-      {AREA_CATEGORIES.map((category, index) => {
+      {categories.map((category, index) => {
         const isActive = category.slug === ACTIVE_CATEGORY
 
         return (

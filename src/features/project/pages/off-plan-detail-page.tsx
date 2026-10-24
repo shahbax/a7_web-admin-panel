@@ -14,8 +14,8 @@ import { ProjectPaymentPlansSection } from "@/features/project/ui/projects/proje
 import { ProjectPropertiesForSaleSection } from "@/features/project/ui/projects/project-properties-for-sale-section"
 import { ProjectSimilarProjectsSection } from "@/features/project/ui/projects/project-similar-projects-section"
 import { ProjectTimelineSection } from "@/features/project/ui/projects/project-timeline-section"
-import { detailDeveloperCtaContent } from "@/features/developer/content/developer-cta-content"
-import { getOffPlanProjectDetail } from "@/features/project"
+import { loadDeveloperCtaContent } from "@/features/home/services/shared-cta-content"
+import { loadOffPlanProject } from "@/features/project/services/project-content"
 
 type OffPlanDetailPageProps = {
   params: Promise<{ id: string }>
@@ -23,11 +23,13 @@ type OffPlanDetailPageProps = {
 
 export async function OffPlanDetailPage({ params }: OffPlanDetailPageProps) {
   const { id } = await params
-  const project = getOffPlanProjectDetail(id)
+  const loaded = await loadOffPlanProject(id)
 
-  if (!project) {
+  if (!loaded) {
     notFound()
   }
+
+  const { project } = loaded
 
   return (
     <main>
@@ -48,7 +50,7 @@ export async function OffPlanDetailPage({ params }: OffPlanDetailPageProps) {
         detailRoute="off-plan"
         title="Similar Off Plan Launches"
       />
-      <HomeDeveloperCtaNewsletter {...detailDeveloperCtaContent} />
+      <HomeDeveloperCtaNewsletter {...(await loadDeveloperCtaContent()).detail} />
     </main>
   )
 }

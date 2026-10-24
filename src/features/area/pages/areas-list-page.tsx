@@ -1,17 +1,19 @@
 import type { Metadata } from "next"
 
 import { AreasPage } from "@/features/area/ui/areas/areas-page"
-import { AREAS_PAGE_DESCRIPTION, AREAS_PAGE_TITLE } from "@/features/area/content/areas-page-content"
+import { loadAreaItems, loadAreasPageContent } from "@/features/area/services/area-content"
 
-export const areasListMetadata: Metadata = {
-  title: `${AREAS_PAGE_TITLE} | A Seven Properties`,
-  description: AREAS_PAGE_DESCRIPTION,
+export async function generateAreasListMetadata(): Promise<Metadata> {
+  const { content } = await loadAreasPageContent()
+  return { title: content.seo.title, description: content.seo.description }
 }
 
-export function AreasListPage() {
+export async function AreasListPage() {
+  const [{ content, layout }, areas] = await Promise.all([loadAreasPageContent(), loadAreaItems()])
+
   return (
     <main>
-      <AreasPage />
+      <AreasPage content={content} layout={layout} areas={areas} />
     </main>
   )
 }

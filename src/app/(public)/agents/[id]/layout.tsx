@@ -1,1 +1,1 @@
-export { default } from "@/features/agent/pages/agent-profile-layout"
+export { default, generateAgentProfileStaticParams as generateStaticParams } from "@/features/agent/pages/agent-profile-layout"

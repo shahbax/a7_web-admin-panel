@@ -5,6 +5,9 @@ import {
   Layers,
   Inbox,
   PanelsTopLeft,
+  Users,
+  History,
+  UserCog,
   Settings as SettingsIcon,
   type LucideIcon,
 } from "lucide-react"
@@ -33,6 +36,9 @@ export const adminNavItems: readonly AdminNavItem[] = [
   { label: "Media library", href: "/admin/media", icon: ImageIcon },
   { label: "Leads", href: "/admin/leads", icon: Inbox },
   { label: "Settings", href: "/admin/settings", icon: SettingsIcon, minRole: "ADMIN" },
+  { label: "Users", href: "/admin/users", icon: Users, minRole: "OWNER" },
+  { label: "Activity log", href: "/admin/activity", icon: History, minRole: "ADMIN" },
+  { label: "My account", href: "/admin/account", icon: UserCog },
 ]
 
 export function visibleNavItems(role: Role): AdminNavItem[] {

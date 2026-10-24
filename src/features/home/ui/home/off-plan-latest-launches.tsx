@@ -12,12 +12,15 @@ import { HOME_OFFPLAN_SECTION_CLASS } from "@/shared/lib/constants/home.constant
 import { offPlanProjectPath } from "@/shared/lib/constants/routes"
 import { cn } from "@/shared/lib/cn"
 import type { Property } from "@/features/property"
+import { HOME_OFF_PLAN_TEXTS } from "@/features/home/services/content"
 
 import "swiper/css"
 
 export type OffPlanLatestLaunchesProps = {
   properties: Property[]
   browseAllHref?: string
+  title?: string
+  browseAllLabel?: string
   sectionId?: string
   className?: string
 }
@@ -27,7 +30,9 @@ const VIEWPORT = { once: true, amount: 0.12 as const }
 
 export function OffPlanLatestLaunches({
   properties,
-  browseAllHref = "/properties",
+  browseAllHref = HOME_OFF_PLAN_TEXTS.browseAllHref,
+  title = HOME_OFF_PLAN_TEXTS.title,
+  browseAllLabel = HOME_OFF_PLAN_TEXTS.browseAllLabel,
   sectionId,
   className,
 }: OffPlanLatestLaunchesProps) {
@@ -49,7 +54,7 @@ export function OffPlanLatestLaunches({
           viewport={VIEWPORT}
           transition={{ duration: 0.85, ease: EASE }}
         >
-          Off Plan Latest Launches
+          {title}
         </motion.h2>
 
         <motion.div
@@ -92,7 +97,7 @@ export function OffPlanLatestLaunches({
             href={browseAllHref}
             className="text-sm font-medium text-white underline-offset-4 transition-colors hover:text-white/85 hover:underline md:text-[15px]"
           >
-            Browse all
+            {browseAllLabel}
           </Link>
           <SwiperNavButtons
             prevClass={prevClass}

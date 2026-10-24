@@ -11,11 +11,13 @@ import { AgentsResultsSection } from "./agents-results-section"
 export type AgentsListingShellProps = {
   agents: RealEstateAgentProfile[]
   breadcrumbs: BreadcrumbItem[]
+  title?: string
 }
 
 export function AgentsListingShell({
   agents,
   breadcrumbs,
+  title,
 }: AgentsListingShellProps) {
   const [sort, setSort] = useState("featured")
 
@@ -23,6 +25,7 @@ export function AgentsListingShell({
     <>
       <AgentsPageHeaderSection
         breadcrumbs={breadcrumbs}
+        title={title}
         sortValue={sort}
         onSortChange={setSort}
       />

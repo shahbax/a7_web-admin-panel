@@ -1,17 +1,14 @@
 import type { Metadata } from "next"
 
 import { PropertyManagementPage } from "@/features/services/ui/property-management"
-import {
-  getPropertyManagementPageContent,
-  PROPERTY_MANAGEMENT_PAGE_TITLE,
-} from "@/features/services/services/content"
+import { loadPropertyManagementContent } from "@/features/services/services/content"
 
-export const propertyManagementPageMetadata: Metadata = {
-  title: `${PROPERTY_MANAGEMENT_PAGE_TITLE} | A Seven Properties`,
-  description:
-    "Professional property management in Dubai — tenant placement, rent collection, maintenance, and compliance.",
+export async function generatePropertyManagementMetadata(): Promise<Metadata> {
+  const { content } = await loadPropertyManagementContent()
+  return { title: content.seo.title, description: content.seo.description }
 }
 
-export function PropertyManagementPageRoute() {
-  return <PropertyManagementPage content={getPropertyManagementPageContent()} />
+export async function PropertyManagementPageRoute() {
+  const { content, layout } = await loadPropertyManagementContent()
+  return <PropertyManagementPage content={content} layout={layout} />
 }

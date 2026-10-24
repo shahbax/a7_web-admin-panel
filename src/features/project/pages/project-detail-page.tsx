@@ -14,8 +14,8 @@ import { ProjectPaymentPlansSection } from "@/features/project/ui/projects/proje
 import { ProjectPropertiesForSaleSection } from "@/features/project/ui/projects/project-properties-for-sale-section"
 import { ProjectSimilarProjectsSection } from "@/features/project/ui/projects/project-similar-projects-section"
 import { ProjectTimelineSection } from "@/features/project/ui/projects/project-timeline-section"
-import { detailDeveloperCtaContent } from "@/features/developer/content/developer-cta-content"
-import { getProjectDetail } from "@/features/project"
+import { loadDeveloperCtaContent } from "@/features/home/services/shared-cta-content"
+import { loadSecondaryProject } from "@/features/project/services/project-content"
 
 type ProjectDetailPageProps = {
   params: Promise<{ id: string }>
@@ -23,11 +23,13 @@ type ProjectDetailPageProps = {
 
 export async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const { id } = await params
-  const project = getProjectDetail(id)
+  const loaded = await loadSecondaryProject(id)
 
-  if (!project) {
+  if (!loaded) {
     notFound()
   }
+
+  const { project } = loaded
 
   return (
     <main className="bg-white">
@@ -47,7 +49,7 @@ export async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
       <TrustedDeveloperPartners className="bg-white! py-7.5!" />
       <ProjectFaqSection projectTitle={project.title} items={project.faq} />
       <ProjectSimilarProjectsSection properties={project.similarProjects} />
-      <HomeDeveloperCtaNewsletter {...detailDeveloperCtaContent} />
+      <HomeDeveloperCtaNewsletter {...(await loadDeveloperCtaContent()).detail} />
     </main>
   )
 }

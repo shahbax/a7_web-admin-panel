@@ -4,30 +4,34 @@ import {
   MarketingWhyChooseSection,
   ServiceMarketingPageLayout,
 } from "@/shared/ui/marketing"
+import type { SectionLayout } from "@/features/cms/site-content/core/types"
 import type { ListYourPropertyPageContent } from "@/features/services/services/content"
 
 export type ListYourPropertyPageProps = {
   content: ListYourPropertyPageContent
+  layout?: SectionLayout
 }
 
-export function ListYourPropertyPage({ content }: ListYourPropertyPageProps) {
+export function ListYourPropertyPage({ content, layout }: ListYourPropertyPageProps) {
   return (
     <ServiceMarketingPageLayout
-      hero={<MarketingHeroSection {...content.heroProps} />}
+      layout={layout}
+      hero={<MarketingHeroSection {...content.hero} />}
       grid={
         <>
-          <MarketingWhyChooseSection {...content.whySectionProps} />
+          <MarketingWhyChooseSection {...content.why} />
           <MarketingHowItWorksSection
-            title={content.howItWorksTitle}
-            subtitle={content.howItWorksSubtitle}
-            steps={content.howItWorksSteps}
+            title={content.howItWorks.title}
+            subtitle={content.howItWorks.subtitle}
+            steps={content.howItWorks.steps}
             headingId="list-your-property-how-heading"
           />
         </>
       }
-      testimonialsSectionProps={content.testimonialsSectionProps}
-      faqSectionProps={content.faqSectionProps}
-      contactSectionProps={content.contactSectionProps}
+      testimonialsSectionProps={content.testimonials}
+      faqSectionProps={content.faq}
+      contactSectionProps={content.contact}
+      newsletterProps={content.newsletter}
     />
   )
 }

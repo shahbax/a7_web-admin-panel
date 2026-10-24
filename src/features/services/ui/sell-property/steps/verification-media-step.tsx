@@ -5,6 +5,7 @@ import { FileImage, FileVideo } from "lucide-react"
 
 import { FileUploadDropzone } from "@/shared/ui/file-upload-dropzone"
 import { UploadFileRow } from "@/shared/ui/upload-file-row"
+import type { SellPropertyFormContent } from "@/features/services/core/sell-property-content"
 
 function formatFileSize(bytes: number) {
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)}KB`
@@ -15,7 +16,7 @@ function fileIcon(file: File) {
   return file.type.startsWith("video/") ? FileVideo : FileImage
 }
 
-export function VerificationMediaStep() {
+export function VerificationMediaStep({ content }: { content: SellPropertyFormContent["media"] }) {
   type UploadEntry = {
     id: string
     file: File
@@ -85,7 +86,7 @@ export function VerificationMediaStep() {
 
   return (
     <div className="mt-7 space-y-4">
-      <h2 className="text-xl font-inter leading-tight font-semibold text-a7-black">Upload Multiple Images & Video</h2>
+      <h2 className="text-xl font-inter leading-tight font-semibold text-a7-black">{content.heading}</h2>
 
       <FileUploadDropzone
         accept="image/*,video/*"
@@ -94,7 +95,7 @@ export function VerificationMediaStep() {
         className="px-4 py-8 sm:px-6 sm:py-12"
         title={
           <span className="text-sm leading-snug sm:text-lg">
-            <span className="text-[#B68E45]">Click here</span> to upload or drop files here
+            <span className="text-[#B68E45]">{content.uploadHighlight}</span> {content.uploadText}
           </span>
         }
       />
@@ -112,7 +113,7 @@ export function VerificationMediaStep() {
                 sizeLabel={formatFileSize(file.size)}
                 icon={Icon}
                 iconClassName={isImage ? "text-[#B68E45]" : "text-[#B0B7C4]"}
-                previewLabel={isImage && entry.status === "uploaded" ? "Preview" : undefined}
+                previewLabel={isImage && entry.status === "uploaded" ? content.previewLabel : undefined}
                 progress={entry.progress}
                 isRemoving={entry.status === "removing"}
                 isUploaded={entry.status === "uploaded"}

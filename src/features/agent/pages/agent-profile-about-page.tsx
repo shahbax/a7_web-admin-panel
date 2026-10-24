@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation"
 
 import { AgentProfileAbout } from "@/features/agent/ui/agent-profile"
-import { fetchAgentProfile } from "@/features/agent"
+import {
+  loadAgentProfile,
+  loadAgentsPageContent,
+} from "@/features/agent/services/agent-content"
 
 type AgentProfileAboutPageProps = {
   params: Promise<{ id: string }>
@@ -9,11 +12,11 @@ type AgentProfileAboutPageProps = {
 
 export async function AgentProfileAboutPage({ params }: AgentProfileAboutPageProps) {
   const { id } = await params
-  const agent = await fetchAgentProfile(id)
+  const [agent, { content }] = await Promise.all([loadAgentProfile(id), loadAgentsPageContent()])
 
   if (!agent) {
     notFound()
   }
 
-  return <AgentProfileAbout agent={agent} />
+  return <AgentProfileAbout agent={agent} copy={content.profile} />
 }

@@ -8,11 +8,14 @@ import { Badge } from "@/shared/ui/badge"
 import {
   PROPERTY_LISTING_AREA_PILLS,
   PROPERTY_LISTING_LOCATION_LINKS,
+  type PropertyListingLocationLink,
 } from "@/features/property/services/content"
 import { propertiesListPath } from "@/shared/lib/constants/routes"
 import { cn } from "@/shared/lib/cn"
 
 export type PropertyListingDiscoverSectionProps = {
+  locationLinks?: readonly PropertyListingLocationLink[]
+  areaPills?: readonly string[]
   className?: string
 }
 
@@ -23,7 +26,11 @@ const PROPERTY_LISTING_BREADCRUMBS: BreadcrumbItem[] = [
 ]
 
 /** Static location and area lists (display only — no search links). */
-export function PropertyListingDiscoverSection({ className }: PropertyListingDiscoverSectionProps) {
+export function PropertyListingDiscoverSection({
+  locationLinks = PROPERTY_LISTING_LOCATION_LINKS,
+  areaPills = PROPERTY_LISTING_AREA_PILLS,
+  className,
+}: PropertyListingDiscoverSectionProps) {
 
   return (
     <section
@@ -43,7 +50,7 @@ export function PropertyListingDiscoverSection({ className }: PropertyListingDis
           className="mt-4 grid grid-cols-1 gap-y-2.5 min-[420px]:grid-cols-2 sm:mt-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg:gap-x-6 lg:gap-y-3"
           aria-label="Locations by emirate"
         >
-          {PROPERTY_LISTING_LOCATION_LINKS.map((location, index) => (
+          {locationLinks.map((location, index) => (
             <motion.div
               key={location.name}
               initial={{ opacity: 0, y: 12 }}
@@ -66,7 +73,7 @@ export function PropertyListingDiscoverSection({ className }: PropertyListingDis
           role="group"
           aria-label="Popular areas"
         >
-          {PROPERTY_LISTING_AREA_PILLS.map((area, index) => (
+          {areaPills.map((area, index) => (
             <motion.div
               key={area}
               initial={{ opacity: 0, scale: 0.9 }}

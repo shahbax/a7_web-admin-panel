@@ -2,6 +2,9 @@ import type { ProjectFaqItem, ProjectOverviewBlock } from "@/features/property"
 
 export const PROPERTY_LISTING_PAGE_TITLE = "Apartments for Sale in Dubai"
 
+export const PROPERTY_LISTING_PAGE_DESCRIPTION =
+  "Browse apartments in Dubai. Filter by location, price, and bedrooms. Connect with A Seven Properties advisors for viewings and offers."
+
 
 /** Blurred hero behind the listing search bar. */
 export const PROPERTY_LISTING_SEARCH_HERO_IMAGE =

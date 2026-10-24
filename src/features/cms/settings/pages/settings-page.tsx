@@ -102,8 +102,11 @@ async function renderEditor(key: SettingKey) {
           <TextField label="Email" name="email" defaultValue={site.email} />
         </div>
         <TextArea label="Office address" name="officeAddress" defaultValue={site.officeAddress} rows={2} />
-        <TextField label="Map embed URL" name="mapEmbedUrl" defaultValue={site.mapEmbedUrl} placeholder="Google Maps embed URL" />
+        <input type="hidden" name="mapEmbedUrl" defaultValue={site.mapEmbedUrl} />
         <TextField label="Opening hours" name="openingHours" defaultValue={site.openingHours} />
+        <p className="text-xs text-muted-foreground">
+          These details describe the business to Google (structured data). The contact details shown on each page are edited under Website content.
+        </p>
       </SettingsForm>
     )
   }
@@ -131,10 +134,11 @@ async function renderEditor(key: SettingKey) {
         <div className="grid gap-4 sm:grid-cols-2">
           <TextField label="CTA button label" name="ctaLabel" defaultValue={header.ctaLabel} />
           <TextField label="CTA button link" name="ctaHref" defaultValue={header.ctaHref} />
-          <TextField label="Logo (light) URL" name="logoLightUrl" defaultValue={header.logoLightUrl} help="Optional override; leave blank for the default logo." />
-          <TextField label="Logo (dark) URL" name="logoDarkUrl" defaultValue={header.logoDarkUrl} help="Optional override." />
         </div>
-        <CheckboxField label="Show the search bar where applicable" name="showSearch" defaultChecked={header.showSearch} />
+        <input type="hidden" name="logoLightUrl" defaultValue={header.logoLightUrl} />
+        <input type="hidden" name="logoDarkUrl" defaultValue={header.logoDarkUrl} />
+        {header.showSearch ? <input type="hidden" name="showSearch" defaultValue="on" /> : null}
+        <p className="text-xs text-muted-foreground">The menu items are edited under the Menu tab.</p>
       </SettingsForm>
     )
   }

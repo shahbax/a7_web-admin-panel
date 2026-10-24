@@ -23,7 +23,7 @@ export function PropertyManagementFeaturesSection({
     <section className={cn("bg-a7-panel-surface py-10 md:py-14", className)} aria-labelledby="property-management-features-heading">
       <div className="container mx-auto px-4">
         <h2 id="property-management-features-heading" className="sr-only">
-          Property management services
+          {features.heading}
         </h2>
         <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           {features.items.map((feature, index) => (

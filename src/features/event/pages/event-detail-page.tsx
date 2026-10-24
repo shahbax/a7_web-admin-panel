@@ -2,32 +2,30 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import { EventDetailPage } from "@/features/event/ui/events"
-import { getAllEventIds, getEventDetailById } from "@/features/event/content/events-page-content"
+import { loadEventDetail, loadEventIds } from "@/features/event/services/event-content"
+import { loadDeveloperCtaContent } from "@/features/home/services/shared-cta-content"
 
 type EventDetailPageProps = {
   params: Promise<{ id: string }>
 }
 
 export async function generateEventDetailStaticParams() {
-  return getAllEventIds().map((id) => ({ id }))
+  return (await loadEventIds()).map((id) => ({ id }))
 }
 
 export async function generateEventDetailMetadata({ params }: EventDetailPageProps): Promise<Metadata> {
   const { id } = await params
-  const event = getEventDetailById(id)
+  const event = await loadEventDetail(id)
 
   if (!event) return { title: "Event not found | A Seven Properties" }
 
-  return {
-    title: `${event.heroTitle} | A Seven Properties`,
-    description: event.aboutDescriptionParagraphs[0],
-  }
+  return { title: event.seo.title, description: event.seo.description }
 }
 
 export async function EventDetailPageRoute({ params }: EventDetailPageProps) {
   const { id } = await params
-  const event = getEventDetailById(id)
+  const event = await loadEventDetail(id)
   if (!event) notFound()
 
-  return <EventDetailPage event={event} />
+  return <EventDetailPage event={event} newsletter={(await loadDeveloperCtaContent()).home} />
 }

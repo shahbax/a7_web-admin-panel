@@ -6,10 +6,11 @@ import { cn } from "@/shared/lib/cn"
 
 export type AgentsSearchHeroProps = {
   className?: string
+  imageUrl?: string
 }
 
 /** Same hero shell as the property listing page, with agent-specific search filters. */
-export function AgentsSearchHero({ className }: AgentsSearchHeroProps) {
+export function AgentsSearchHero({ className, imageUrl }: AgentsSearchHeroProps) {
   return (
     <section
       className={cn("relative z-10 border-b border-border", className)}
@@ -17,7 +18,7 @@ export function AgentsSearchHero({ className }: AgentsSearchHeroProps) {
     >
       <div className="relative flex min-h-[10.5rem] items-center py-6 sm:min-h-40 sm:py-8">
         <Image
-          src={PROPERTY_LISTING_SEARCH_HERO_IMAGE}
+          src={imageUrl || PROPERTY_LISTING_SEARCH_HERO_IMAGE}
           alt=""
           fill
           priority

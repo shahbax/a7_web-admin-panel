@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation"
 
 import { AgentListingsSection } from "@/features/agent/ui/agent-profile/agent-listings-section"
-import { fetchAgentProfile, getAgentListings } from "@/features/agent"
+import { getAgentListings } from "@/features/agent"
+import { loadAgentProfile } from "@/features/agent/services/agent-content"
 
 type AgentProfileListingsPageProps = {
   params: Promise<{ id: string }>
@@ -9,7 +10,7 @@ type AgentProfileListingsPageProps = {
 
 export async function AgentProfileListingsPage({ params }: AgentProfileListingsPageProps) {
   const { id } = await params
-  const agent = await fetchAgentProfile(id)
+  const agent = await loadAgentProfile(id)
 
   if (!agent) {
     notFound()

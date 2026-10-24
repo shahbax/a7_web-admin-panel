@@ -9,19 +9,26 @@ import { SwiperNavButtons } from "@/shared/ui/swiper-nav-buttons"
 import { useSwiperNav } from "@/shared/hooks/use-swiper-nav"
 import { agentProfilePath } from "@/shared/lib/constants/routes"
 import { cn } from "@/shared/lib/cn"
-import type { RealEstateExpert } from "@/features/home/services/content"
+import { HOME_EXPERTS_TEXTS, type RealEstateExpert } from "@/features/home/services/content"
 
 import "swiper/css"
 
 export type RealEstateExpertsProps = {
   experts: readonly RealEstateExpert[]
+  kicker?: string
+  title?: string
   className?: string
 }
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number]
 const VIEWPORT = { once: true, amount: 0.12 as const }
 
-export function RealEstateExperts({ experts, className }: RealEstateExpertsProps) {
+export function RealEstateExperts({
+  experts,
+  kicker = HOME_EXPERTS_TEXTS.kicker,
+  title = HOME_EXPERTS_TEXTS.title,
+  className,
+}: RealEstateExpertsProps) {
   const { prevClass, nextClass, swiperNavConfig } = useSwiperNav("experts")
 
   if (experts.length === 0) return null
@@ -40,10 +47,10 @@ export function RealEstateExperts({ experts, className }: RealEstateExpertsProps
           transition={{ duration: 0.85, ease: EASE }}
         >
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground sm:text-sm">
-            Seamless and friendly service
+            {kicker}
           </p>
           <h2 className="mt-2 font-heading text-[clamp(1.5rem,5vw,3rem)] font-semibold leading-[1.12] tracking-tight text-black md:text-[48px] md:leading-[1.08]">
-            Real estate experts
+            {title}
           </h2>
         </motion.header>
 

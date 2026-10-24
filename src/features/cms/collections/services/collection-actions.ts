@@ -7,6 +7,7 @@ import { requireUser } from "@/features/auth/services/guards"
 import { recordAudit } from "@/shared/lib/audit/audit-log"
 import { getCollectionDef } from "@/features/cms/collections/registry"
 import { normalizeSlug } from "@/features/cms/pages/core/entity"
+import { sanitizeRichFields } from "@/shared/lib/html/sanitize"
 import {
   createItem,
   deleteItem,
@@ -61,7 +62,7 @@ export async function saveItemAction(
   const title = typeof titleValue === "string" && titleValue.trim() ? titleValue.trim() : String(form.get("title") ?? "Untitled")
   const slug = def.hasSlug ? normalizeSlug(String(form.get("slug") ?? "") || title) : null
 
-  await updateItem(id, { title, slug, data })
+  await updateItem(id, { title, slug, data: sanitizeRichFields(data, def.fields) })
   await recordAudit({
     userId: user.id,
     userEmail: user.email,

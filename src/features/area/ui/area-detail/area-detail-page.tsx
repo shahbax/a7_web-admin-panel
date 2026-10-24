@@ -9,10 +9,12 @@ import { AreaDetailSearchHero } from "./area-detail-search-hero"
 import { AreaDetailShell } from "./area-detail-shell"
 
 type AreaDetailPageProps = {
+  /** Developer prices & newsletter band (shared, editable in admin). */
+  newsletter?: typeof homeDeveloperCtaContent
   area: AreaDetailContent
 }
 
-export function AreaDetailPage({ area }: AreaDetailPageProps) {
+export function AreaDetailPage({ area, newsletter = homeDeveloperCtaContent }: AreaDetailPageProps) {
   const sectionIds = getAreaDetailSectionIds()
 
   return (
@@ -35,7 +37,7 @@ export function AreaDetailPage({ area }: AreaDetailPageProps) {
         <AreaDetailShell area={area} sectionIds={sectionIds} />
       </div>
 
-      <HomeDeveloperCtaNewsletter {...homeDeveloperCtaContent} />
+      <HomeDeveloperCtaNewsletter {...newsletter} />
     </>
   )
 }

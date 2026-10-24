@@ -1,17 +1,25 @@
 import type { Metadata } from "next"
 
 import { DevelopersPage } from "@/features/developer/ui/developers"
-import { DEVELOPERS_PAGE_INTRO, DEVELOPERS_PAGE_TITLE } from "@/features/developer/content/developers-page-content"
+import {
+  loadDevelopers,
+  loadDevelopersPageContent,
+} from "@/features/developer/services/developer-content"
 
-export const developersListMetadata: Metadata = {
-  title: `${DEVELOPERS_PAGE_TITLE} | A Seven Properties`,
-  description: DEVELOPERS_PAGE_INTRO[0],
+export async function generateDevelopersListMetadata(): Promise<Metadata> {
+  const { content } = await loadDevelopersPageContent()
+  return { title: content.seo.title, description: content.seo.description }
 }
 
-export function DevelopersListPage() {
+export async function DevelopersListPage() {
+  const [{ content, layout }, developers] = await Promise.all([
+    loadDevelopersPageContent(),
+    loadDevelopers(),
+  ])
+
   return (
     <main className="bg-white">
-      <DevelopersPage />
+      <DevelopersPage content={content} layout={layout} developers={developers} />
     </main>
   )
 }

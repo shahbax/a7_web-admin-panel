@@ -54,7 +54,7 @@ export const DEVELOPER_MAP_MARKER_POSITIONS: readonly DeveloperMapMarkerPosition
 
 export type DeveloperDetail = DubaiDeveloperProfile & {
   pageTitle: string
-  intro: readonly [string, string]
+  intro: readonly string[]
   heroBackgroundUrl: string
   searchPlaceholder: string
   seoSections: ProjectOverviewBlock[]

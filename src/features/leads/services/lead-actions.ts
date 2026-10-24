@@ -12,6 +12,7 @@ import {
   setLeadHandled,
 } from "@/features/leads/core/repository"
 import { notifyNewLead } from "@/features/leads/services/mailer"
+import { storeLeadFiles } from "@/features/leads/core/lead-files"
 
 export type LeadFormState = { error?: string; ok?: boolean }
 
@@ -69,8 +70,18 @@ export async function submitLeadAction(
   // Collect any extra fields as payload.
   const known = new Set(["type", "name", "email", "phone", "message", "reference", "sourceUrl", "company"])
   const payload: Record<string, unknown> = {}
+  const files: File[] = []
   for (const [key, value] of form.entries()) {
-    if (!known.has(key)) payload[key] = typeof value === "string" ? value : "(file)"
+    if (typeof value !== "string") {
+      if (data.type === "career") files.push(value)
+      continue
+    }
+    if (!known.has(key)) payload[key] = value
+  }
+  if (files.length > 0) {
+    const stored = await storeLeadFiles(files)
+    if (stored.error) return { error: stored.error }
+    if (stored.files.length > 0) payload.files = stored.files
   }
 
   const lead = await createLead({

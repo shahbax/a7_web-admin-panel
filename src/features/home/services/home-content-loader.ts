@@ -94,7 +94,7 @@ export async function getHomeNewsPosts(): Promise<readonly HomeNewsPost[]> {
       imageUrl: str(it.data, "cover"),
       date: str(it.data, "date"),
       views: 0,
-      href: it.slug ? `/${it.slug}` : "#",
+      href: it.slug ? `/news/${it.slug}` : "/news",
       featured: i === 0,
     }))
   } catch {

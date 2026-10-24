@@ -2,35 +2,33 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import { DeveloperDetailPage } from "@/features/developer/ui/developers/developer-detail-page"
-import { getAllDeveloperIds, getDeveloperById } from "@/features/developer/content/developer-detail-content"
+import { loadDeveloperDetail, loadDeveloperIds } from "@/features/developer/services/developer-content"
+import { loadDeveloperCtaContent } from "@/features/home/services/shared-cta-content"
 
 type DeveloperDetailPageProps = {
   params: Promise<{ id: string }>
 }
 
 export async function generateDeveloperDetailStaticParams() {
-  return getAllDeveloperIds().map((id) => ({ id }))
+  return (await loadDeveloperIds()).map((id) => ({ id }))
 }
 
 export async function generateDeveloperDetailMetadata({
   params,
 }: DeveloperDetailPageProps): Promise<Metadata> {
   const { id } = await params
-  const developer = getDeveloperById(id)
+  const developer = await loadDeveloperDetail(id)
 
   if (!developer) {
     return { title: "Developer not found | A Seven Properties" }
   }
 
-  return {
-    title: `${developer.pageTitle} | A Seven Properties`,
-    description: developer.intro[0],
-  }
+  return { title: developer.seo.title, description: developer.seo.description }
 }
 
 export async function DeveloperDetailPageRoute({ params }: DeveloperDetailPageProps) {
   const { id } = await params
-  const developer = getDeveloperById(id)
+  const developer = await loadDeveloperDetail(id)
 
   if (!developer) {
     notFound()
@@ -38,7 +36,7 @@ export async function DeveloperDetailPageRoute({ params }: DeveloperDetailPagePr
 
   return (
     <main className="bg-white">
-      <DeveloperDetailPage developer={developer} />
+      <DeveloperDetailPage developer={developer} newsletter={(await loadDeveloperCtaContent()).home} />
     </main>
   )
 }

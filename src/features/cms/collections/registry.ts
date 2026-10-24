@@ -9,6 +9,8 @@ export type CollectionDef = {
   fields: BlockField[]
 }
 
+// Events, careers, services, developers, areas and projects are edited under
+// "Website content" (features/cms/site-content), next to the pages that show them.
 export const collectionRegistry: CollectionDef[] = [
   {
     key: "testimonials",
@@ -77,91 +79,6 @@ export const collectionRegistry: CollectionDef[] = [
       { name: "name", label: "Name", type: "text" },
       { name: "logo", label: "Logo", type: "image" },
       { name: "href", label: "Link", type: "url" },
-    ],
-  },
-  {
-    key: "events",
-    label: "Events",
-    singular: "Event",
-    hasSlug: true,
-    titleField: "title",
-    fields: [
-      { name: "title", label: "Title", type: "text" },
-      { name: "date", label: "Date", type: "text" },
-      { name: "location", label: "Location", type: "text" },
-      { name: "excerpt", label: "Excerpt", type: "textarea" },
-      { name: "cover", label: "Cover image", type: "image" },
-      { name: "body", label: "Details", type: "richtext" },
-    ],
-  },
-  {
-    key: "careers",
-    label: "Careers / jobs",
-    singular: "Job",
-    hasSlug: true,
-    titleField: "title",
-    fields: [
-      { name: "title", label: "Job title", type: "text" },
-      { name: "location", label: "Location", type: "text" },
-      { name: "type", label: "Employment type", type: "text", placeholder: "Full-time" },
-      { name: "excerpt", label: "Summary", type: "textarea" },
-      { name: "body", label: "Description", type: "richtext" },
-    ],
-  },
-  {
-    key: "services",
-    label: "Services",
-    singular: "Service",
-    hasSlug: true,
-    titleField: "title",
-    fields: [
-      { name: "title", label: "Title", type: "text" },
-      { name: "icon", label: "Icon (lucide name)", type: "text" },
-      { name: "excerpt", label: "Excerpt", type: "textarea" },
-      { name: "body", label: "Body", type: "richtext" },
-    ],
-  },
-  {
-    key: "developers",
-    label: "Developers",
-    singular: "Developer",
-    hasSlug: true,
-    titleField: "name",
-    fields: [
-      { name: "name", label: "Name", type: "text" },
-      { name: "logo", label: "Logo", type: "image" },
-      { name: "description", label: "Description", type: "textarea" },
-      { name: "href", label: "Website", type: "url" },
-    ],
-  },
-  {
-    key: "areas",
-    label: "Areas / communities",
-    singular: "Area",
-    hasSlug: true,
-    titleField: "name",
-    fields: [
-      { name: "name", label: "Name", type: "text" },
-      { name: "excerpt", label: "Excerpt", type: "textarea" },
-      { name: "cover", label: "Cover image", type: "image" },
-      { name: "body", label: "Description", type: "richtext" },
-    ],
-  },
-  {
-    key: "projects",
-    label: "Off-plan projects",
-    singular: "Project",
-    hasSlug: true,
-    titleField: "name",
-    fields: [
-      { name: "name", label: "Project name", type: "text" },
-      { name: "developer", label: "Developer", type: "text" },
-      { name: "area", label: "Area", type: "text" },
-      { name: "handoverDate", label: "Handover date", type: "text" },
-      { name: "priceFrom", label: "Price from", type: "text" },
-      { name: "cover", label: "Cover image", type: "image" },
-      { name: "themeColor", label: "Brand colour (hex)", type: "text", help: "Palette is generated from this colour." },
-      { name: "description", label: "Overview", type: "richtext" },
     ],
   },
 ]

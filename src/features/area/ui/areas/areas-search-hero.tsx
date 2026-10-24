@@ -5,15 +5,16 @@ import { AREAS_SEARCH_HERO_IMAGE } from "@/features/area/services/content"
 import { cn } from "@/shared/lib/cn"
 
 export type AreasSearchHeroProps = {
+  imageUrl?: string
   className?: string
 }
 
-export function AreasSearchHero({ className }: AreasSearchHeroProps) {
+export function AreasSearchHero({ imageUrl = AREAS_SEARCH_HERO_IMAGE, className }: AreasSearchHeroProps) {
   return (
     <section className={cn("relative border-b border-border", className)} aria-label="Area search">
       <div className="relative min-h-36 overflow-hidden md:min-h-40">
         <Image
-          src={AREAS_SEARCH_HERO_IMAGE}
+          src={imageUrl}
           alt=""
           fill
           priority

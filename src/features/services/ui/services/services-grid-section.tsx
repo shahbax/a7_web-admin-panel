@@ -8,19 +8,20 @@ import type { ServicesPageContent } from "@/features/services/services/content"
 import { cn } from "@/shared/lib/cn"
 
 type ServicesGridSectionProps = {
-  offerings: ServicesPageContent["offerings"]
+  heading: ServicesPageContent["grid"]["heading"]
+  offerings: ServicesPageContent["grid"]["offerings"]
   className?: string
 }
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number]
 const VIEWPORT = { once: true, amount: 0.12 as const }
 
-export function ServicesGridSection({ offerings, className }: ServicesGridSectionProps) {
+export function ServicesGridSection({ heading, offerings, className }: ServicesGridSectionProps) {
   return (
     <section className={cn("bg-white py-10 md:py-14", className)} aria-labelledby="services-grid-heading">
       <div className="container mx-auto px-4">
         <h2 id="services-grid-heading" className="sr-only">
-          Our services
+          {heading}
         </h2>
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {offerings.map((service, index) => (

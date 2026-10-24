@@ -9,19 +9,24 @@ import { TestimonialCard } from "@/features/property/ui/property-card"
 import { SwiperNavButtons } from "@/shared/ui/swiper-nav-buttons"
 import { useSwiperNav } from "@/shared/hooks/use-swiper-nav"
 import { cn } from "@/shared/lib/cn"
-import type { HomeTestimonial } from "@/features/home/services/content"
+import { HOME_TESTIMONIALS_TEXTS, type HomeTestimonial } from "@/features/home/services/content"
 
 import "swiper/css"
 
 export type HappyHomeOwnersProps = {
   testimonials: readonly HomeTestimonial[]
+  title?: string
   className?: string
 }
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number]
 const VIEWPORT = { once: true, amount: 0.12 as const }
 
-export function HappyHomeOwners({ testimonials, className }: HappyHomeOwnersProps) {
+export function HappyHomeOwners({
+  testimonials,
+  title = HOME_TESTIMONIALS_TEXTS.title,
+  className,
+}: HappyHomeOwnersProps) {
   const { prevClass, nextClass, swiperNavConfig } = useSwiperNav("testimonials")
 
   if (testimonials.length === 0) return null
@@ -43,7 +48,7 @@ export function HappyHomeOwners({ testimonials, className }: HappyHomeOwnersProp
     >
       <div className="relative container mx-auto px-4">
         <SectionHeader
-          title="Happy new home owners"
+          title={title}
           className="mb-8 sm:mb-10 sm:pr-28 [&_h2]:text-white"
         />
 

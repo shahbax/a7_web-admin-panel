@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useRef, useState, useEffect } from "react"
 import { format, isValid, parse } from "date-fns"
 
 import { CalendarDateIcon } from "@/shared/icons"
@@ -51,7 +51,9 @@ export function DatePicker({
   const [pendingDate, setPendingDate] = useState<Date | undefined>()
   const [calendarMonth, setCalendarMonth] = useState<Date>(() => new Date())
   const pendingDateRef = useRef<Date | undefined>(pendingDate)
-  pendingDateRef.current = pendingDate
+  useEffect(() => {
+    pendingDateRef.current = pendingDate
+  }, [pendingDate])
 
   const handleOpenChange = useCallback(
     (nextOpen: boolean) => {

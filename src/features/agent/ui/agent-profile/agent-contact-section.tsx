@@ -2,7 +2,10 @@
 
 import type { FormEvent } from "react"
 
-import type { AgentProfileDetail } from "@/features/agent/core/domain/entity/agent.entity"
+import type {
+  AgentProfileCopy,
+  AgentProfileDetail,
+} from "@/features/agent/core/domain/entity/agent.entity"
 import { Button } from "@/shared/ui/button"
 import { Input } from "@/shared/ui/input"
 import { Textarea } from "@/shared/ui/textarea"
@@ -11,13 +14,14 @@ import { cn } from "@/shared/lib/cn"
 
 type AgentContactSectionProps = {
   agent: AgentProfileDetail
+  copy: Pick<AgentProfileCopy, "contactTitle" | "contactDescription" | "contactSuccessMessage">
   className?: string
 }
 
 const fieldClassName =
   "border-transparent bg-[#F3F3F3] shadow-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:bg-[#F3F3F3]"
 
-export function AgentContactSection({ agent, className }: AgentContactSectionProps) {
+export function AgentContactSection({ agent, copy, className }: AgentContactSectionProps) {
   const { pending, done, error, submit } = useLeadSubmit()
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -33,16 +37,16 @@ export function AgentContactSection({ agent, className }: AgentContactSectionPro
             id="agent-contact-heading"
             className="font-heading text-2xl font-bold text-a7-black md:text-3xl"
           >
-            Get in Touch with {agent.name}
+            {copy.contactTitle.replaceAll("{name}", agent.name)}
           </h2>
           <p className="mt-2 text-sm text-a7-black md:text-base">
-            If you want to ask anything about the best properties in Dubai, feel free to contact me.
+            {copy.contactDescription.replaceAll("{name}", agent.name)}
           </p>
         </header>
 
         {done ? (
           <p className="mt-6 rounded-xl bg-a7-panel-surface px-4 py-6 text-center text-base font-medium text-a7-black md:mt-8">
-            Thank you — your message has been sent. {agent.name} will be in touch shortly.
+            {copy.contactSuccessMessage.replaceAll("{name}", agent.name)}
           </p>
         ) : (
         <form className="mt-6 md:mt-8" onSubmit={handleSubmit} noValidate>

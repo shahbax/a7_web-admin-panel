@@ -13,7 +13,7 @@ import {
 import { useRef, type ReactNode } from "react"
 
 import { Button } from "@/shared/ui/button"
-import { HOME_BRAND_STORY_IMAGE } from "@/shared/lib/constants/home.constants"
+import { HOME_BRAND_STORY_TEXTS } from "@/features/home/services/content"
 import { cn } from "@/shared/lib/cn"
 
 export type RealEstatingSinceBannerProps = {
@@ -58,9 +58,9 @@ function ParallaxText({
 }
 
 export function RealEstatingSinceBanner({
-  imageUrl = HOME_BRAND_STORY_IMAGE,
-  imageAlt = "Luxury waterfront villas and skyline at golden hour",
-  title = "Real Estating Since 2004",
+  imageUrl = HOME_BRAND_STORY_TEXTS.imageUrl,
+  imageAlt = HOME_BRAND_STORY_TEXTS.imageAlt,
+  title = HOME_BRAND_STORY_TEXTS.title,
   videoHref,
   className,
 }: RealEstatingSinceBannerProps) {

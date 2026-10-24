@@ -5,30 +5,34 @@ import {
   MarketingSolutionsChecklistSection,
   ServiceMarketingPageLayout,
 } from "@/shared/ui/marketing"
+import type { SectionLayout } from "@/features/cms/site-content/core/types"
 import type { ConveyancingPageContent } from "@/features/services/services/content"
 
 export type ConveyancingPageProps = {
   content: ConveyancingPageContent
+  layout?: SectionLayout
 }
 
-export function ConveyancingPage({ content }: ConveyancingPageProps) {
+export function ConveyancingPage({ content, layout }: ConveyancingPageProps) {
   return (
     <ServiceMarketingPageLayout
-      hero={<MarketingHeroSection {...content.heroProps} />}
-      intro={<MarketingImageTextSection {...content.aboutSectionProps} />}
+      layout={layout}
+      hero={<MarketingHeroSection {...content.hero} />}
+      intro={<MarketingImageTextSection {...content.about} />}
       grid={
         <MarketingBenefitsGridSection
-          title={content.prismTitle}
-          subtitle={content.prismSubtitle}
-          benefits={content.prismBenefits}
+          title={content.prism.title}
+          subtitle={content.prism.subtitle}
+          benefits={content.prism.benefits}
           columns={4}
           headingId="conveyancing-prism-heading"
         />
       }
-      afterGrid={<MarketingSolutionsChecklistSection {...content.solutionsSectionProps} />}
-      testimonialsSectionProps={content.testimonialsSectionProps}
-      faqSectionProps={content.faqSectionProps}
-      contactSectionProps={content.contactSectionProps}
+      afterGrid={<MarketingSolutionsChecklistSection {...content.solutions} />}
+      testimonialsSectionProps={content.testimonials}
+      faqSectionProps={content.faq}
+      contactSectionProps={content.contact}
+      newsletterProps={content.newsletter}
     />
   )
 }

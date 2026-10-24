@@ -17,6 +17,7 @@ import {
   unpublishPage,
   updatePageDraft,
 } from "@/features/cms/pages/services/page-service"
+import { sanitizeRichFields } from "@/shared/lib/html/sanitize"
 
 export type PageActionState = { error?: string; ok?: boolean }
 
@@ -31,8 +32,12 @@ const blocksSchema = z.array(blockSchema).max(100)
 function sanitizeBlocks(input: unknown): Block[] | null {
   const parsed = blocksSchema.safeParse(input)
   if (!parsed.success) return null
-  // Drop blocks whose type is not registered.
-  return parsed.data.filter((b) => getBlockDefinition(b.type)) as Block[]
+  // Drop blocks whose type is not registered; strip unsafe HTML from rich text.
+  return parsed.data.flatMap((b) => {
+    const def = getBlockDefinition(b.type)
+    if (!def) return []
+    return [{ ...b, props: sanitizeRichFields(b.props as Record<string, unknown>, def.fields) }]
+  }) as Block[]
 }
 
 export async function createPageAction(

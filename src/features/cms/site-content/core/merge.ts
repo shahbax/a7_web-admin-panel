@@ -55,11 +55,11 @@ function itemId(value: unknown): string | undefined {
  *   components), else the default at the same index, else the first default
  *   item as a template.
  */
-export function mergeContent<T>(defaults: T, stored: unknown): T {
-  return mergeValue(defaults, stored) as T
+export function mergeContent<T>(defaults: T, stored: unknown, shape?: unknown): T {
+  return mergeValue(defaults, stored, shape) as T
 }
 
-function mergeValue(d: unknown, s: unknown): unknown {
+function mergeValue(d: unknown, s: unknown, shape?: unknown): unknown {
   if (s === undefined) return d
 
   if (typeof d === "string") return typeof s === "string" ? s : d
@@ -76,8 +76,10 @@ function mergeValue(d: unknown, s: unknown): unknown {
 
   if (Array.isArray(d)) {
     if (!Array.isArray(s)) return d
-    if (d.length === 0) {
-      // No template to validate against: accept only primitive items.
+    // Template for items with no matching default: learned from sibling arrays
+    // (see core/shape.ts), else the first default item.
+    const template = Array.isArray(shape) && shape.length > 0 ? shape[0] : d[0]
+    if (template === undefined) {
       return s.filter((x) => ["string", "number", "boolean"].includes(typeof x))
     }
     const byId = new Map<string, unknown>()
@@ -87,16 +89,20 @@ function mergeValue(d: unknown, s: unknown): unknown {
     }
     return s.map((item, i) => {
       const id = itemId(item)
-      const base = (id !== undefined ? byId.get(id) : undefined) ?? (i < d.length && itemId(d[i]) === undefined ? d[i] : undefined) ?? d[0]
-      return mergeValue(base, item)
+      const base =
+        (id !== undefined ? byId.get(id) : undefined) ??
+        (i < d.length && itemId(d[i]) === undefined ? d[i] : undefined) ??
+        template
+      return mergeValue(base, item, template)
     })
   }
 
   if (isPlainObject(d)) {
     if (!isPlainObject(s)) return d
+    const sh = isPlainObject(shape) ? shape : undefined
     const out: Record<string, unknown> = { ...d }
     for (const key of Object.keys(d)) {
-      out[key] = mergeValue(d[key], s[key])
+      out[key] = mergeValue(d[key], s[key], sh?.[key])
     }
     return out
   }

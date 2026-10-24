@@ -31,9 +31,6 @@ export function FooterEditor({ footer }: { footer: FooterSettings }) {
           <input className={inputCls} value={state.office} onChange={(e) => set("office", e.target.value)} />
         </Labeled>
       </div>
-      <Labeled label="Newsletter text">
-        <input className={inputCls} value={state.newsletterText} onChange={(e) => set("newsletterText", e.target.value)} />
-      </Labeled>
       <Labeled label="Copyright line">
         <input className={inputCls} value={state.copyright} onChange={(e) => set("copyright", e.target.value)} />
       </Labeled>

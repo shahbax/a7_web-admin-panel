@@ -1,10 +1,23 @@
-import { SellPropertyForm } from "@/features/services/ui/sell-property"
-import { QuickPagesLayout } from "@/shared/layout/quick-pages-layout"
+import type { Metadata } from "next"
 
-export function SellPropertyPage() {
+import { SellPropertyForm, SellPropertyHeroPanel } from "@/features/services/ui/sell-property"
+import { loadSellPropertyContent } from "@/features/services/services/content"
+import { MarketingSplitLayout } from "@/shared/ui/marketing"
+
+export async function generateSellPropertyMetadata(): Promise<Metadata> {
+  const { content } = await loadSellPropertyContent()
+  const metadata: Metadata = {}
+  if (content.seo.title.trim()) metadata.title = content.seo.title
+  if (content.seo.description.trim()) metadata.description = content.seo.description
+  return metadata
+}
+
+/** Same markup as QuickPagesLayout, with the side panel fed from CMS content. */
+export async function SellPropertyPage() {
+  const { content } = await loadSellPropertyContent()
   return (
-    <QuickPagesLayout>
-      <SellPropertyForm />
-    </QuickPagesLayout>
+    <MarketingSplitLayout sidePanel={<SellPropertyHeroPanel content={content.heroPanel} />}>
+      <SellPropertyForm content={content.form} />
+    </MarketingSplitLayout>
   )
 }

@@ -133,7 +133,8 @@ const DEFAULT_PROPERTY_TAGS = [
   "Hattan",
 ]
 
-function buildListings(areaTitle: string): PropertyListing[] {
+/** Sample listing cards for an area (kept in code — listings will come from Bitrix). */
+export function buildAreaPropertyListings(areaTitle: string): PropertyListing[] {
   return getMockPropertyListingDtos().slice(0, 3).map((dto, index) =>
     toPropertyListing({
       ...dto,
@@ -172,7 +173,7 @@ export function buildAreaPropertiesSection(areaTitle: string): AreaPropertiesSec
       ...tx,
       location: areaTitle,
     })),
-    listings: buildListings(areaTitle),
+    listings: buildAreaPropertyListings(areaTitle),
   }
 }
 
@@ -197,5 +198,5 @@ export const ARABIAN_RANCHES_PROPERTIES_SECTION: AreaPropertiesSectionData = {
   })),
   averagePrices: DEFAULT_AVERAGE_PRICES,
   transactions: DEFAULT_TRANSACTIONS.map((tx, index) => ({ id: `ar-tx-${index}`, ...tx })),
-  listings: buildListings("Arabian Ranches"),
+  listings: buildAreaPropertyListings("Arabian Ranches"),
 }

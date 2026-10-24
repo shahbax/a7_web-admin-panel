@@ -1,4 +1,4 @@
-import { careerListMetadata, CareerListPage } from "@/features/career/pages/career-list-page"
+import { CareerListPage, generateCareerListMetadata } from "@/features/career/pages/career-list-page"
 
-export const metadata = careerListMetadata
+export const generateMetadata = generateCareerListMetadata
 export default CareerListPage

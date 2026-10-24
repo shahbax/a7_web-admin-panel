@@ -1,4 +1,7 @@
-import { propertiesListMetadata, PropertiesListPage } from "@/features/property/pages/properties-list-page"
+import {
+  generatePropertiesListMetadata,
+  PropertiesListPage,
+} from "@/features/property/pages/properties-list-page"
 
-export const metadata = propertiesListMetadata
+export const generateMetadata = generatePropertiesListMetadata
 export default PropertiesListPage

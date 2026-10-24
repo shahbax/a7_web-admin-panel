@@ -1,30 +1,33 @@
 import type { Metadata } from "next"
 
 import { AgentsPage } from "@/features/agent/ui/agent-list/agents-page"
-import { homeDeveloperCtaContent } from "@/features/developer/content/developer-cta-content"
+import { getAgentsPageContent } from "@/features/agent"
 import {
-  fetchRealEstateAgents,
-  getAgentsPageContent,
-  AGENTS_PAGE_TITLE,
-} from "@/features/agent"
+  loadAgentsPageContent,
+  loadDirectoryAgents,
+} from "@/features/agent/services/agent-content"
 
-export const agentsListMetadata: Metadata = {
-  title: `${AGENTS_PAGE_TITLE} | A Seven Properties`,
-  description:
-    "Browse top real estate agents in Dubai. Connect via WhatsApp, view profiles, and find advisors who speak your language.",
+export async function generateAgentsListMetadata(): Promise<Metadata> {
+  const { content } = await loadAgentsPageContent()
+  return { title: content.seo.title, description: content.seo.description }
 }
 
 export async function AgentsListPage() {
-  const agents = await fetchRealEstateAgents()
-  const pageContent = getAgentsPageContent()
+  const [agents, { content, layout }] = await Promise.all([
+    loadDirectoryAgents(),
+    loadAgentsPageContent(),
+  ])
 
   return (
     <main>
       <AgentsPage
         agents={agents}
-        breadcrumbs={pageContent.breadcrumbs}
-        seoSections={pageContent.seoSections}
-        developerCta={homeDeveloperCtaContent}
+        breadcrumbs={getAgentsPageContent().breadcrumbs}
+        title={content.title}
+        searchHeroImageUrl={content.searchHero.imageUrl}
+        seoSections={content.seoSections}
+        developerCta={content.newsletter}
+        layout={layout}
       />
     </main>
   )

@@ -11,6 +11,7 @@ import { HeroMainStatCard } from "@/features/home/ui/home/hero-main-stat-card"
 import { HeroPropertySearch } from "./hero-property-search"
 import type { HeroMainProps } from "@/shared/types/home"
 import { Tag02Icon, ArrowUpRightIcon } from "@/shared/icons"
+import { HOME_HERO_TEXTS } from "@/features/home/services/content"
 
 const HeroBgSlider = dynamic(
   () => import("./hero-bg-slider").then((m) => m.HeroBgSlider),
@@ -100,30 +101,30 @@ function heroVariant(delay: number, reducedMotion: boolean | null) {
   }
 }
 
-const DEFAULT_CITY_NAMES = [
-  "Binghatti City",
-  "Downtown Dubai",
-  "Palm Jumeirah",
-  "Dubai Marina",
-  "Business Bay",
-]
+const DEFAULT_CITY_NAMES = HOME_HERO_TEXTS.titleLine2Options
+
+export type HeroSectionProps = HeroMainProps & {
+  /** Label under the discover-more button. */
+  discoverMoreLabel?: string
+}
 
 export function HeroSection({
   imageUrl,
   imageUrls,
   imageAlt = "",
-  titleLine1 = "Luxury Living In",
-  titleLine2 = "Binghatti City",
+  titleLine1 = HOME_HERO_TEXTS.titleLine1,
+  titleLine2 = HOME_HERO_TEXTS.titleLine2,
   titleLine2Options = DEFAULT_CITY_NAMES,
-  subtitle = "We're A Real Estate Agency Dedicated To Helping You Find Your Dream Home. Ready To Talk About Your Ideal Residence?",
-  startingFromValue = "AED 2.5M",
-  startingFromLabel = "Starting From",
-  paymentPlanValue = "30% - 70%",
-  paymentPlanLabel = "Payment Plan",
+  subtitle = HOME_HERO_TEXTS.subtitle,
+  startingFromValue = HOME_HERO_TEXTS.startingFromValue,
+  startingFromLabel = HOME_HERO_TEXTS.startingFromLabel,
+  paymentPlanValue = HOME_HERO_TEXTS.paymentPlanValue,
+  paymentPlanLabel = HOME_HERO_TEXTS.paymentPlanLabel,
   discoverMoreHref = "#discover-main",
+  discoverMoreLabel = HOME_HERO_TEXTS.discoverMoreLabel,
   searchProps,
   className,
-}: HeroMainProps) {
+}: HeroSectionProps) {
   const reducedMotion = useReducedMotion()
   const discoverSectionId = useMemo(
     () => (discoverMoreHref.startsWith("#") ? discoverMoreHref.slice(1) : discoverMoreHref),
@@ -231,7 +232,7 @@ export function HeroSection({
               <ArrowUpRightIcon size={24} aria-hidden />
             </span>
             <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/90">
-              Discover More
+              {discoverMoreLabel}
             </span>
           </button>
         </motion.div>

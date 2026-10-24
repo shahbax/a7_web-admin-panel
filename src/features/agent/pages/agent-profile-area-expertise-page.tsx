@@ -1,7 +1,11 @@
 import { notFound } from "next/navigation"
 
 import { AgentAreaExpertiseSection } from "@/features/agent/ui/agent-profile/agent-area-expertise-section"
-import { fetchAgentProfile, getAgentAreaExpertise } from "@/features/agent"
+import {
+  loadAgentAreaExpertise,
+  loadAgentProfile,
+  loadAgentsPageContent,
+} from "@/features/agent/services/agent-content"
 
 type AgentProfileAreaExpertisePageProps = {
   params: Promise<{ id: string }>
@@ -9,13 +13,15 @@ type AgentProfileAreaExpertisePageProps = {
 
 export async function AgentProfileAreaExpertisePage({ params }: AgentProfileAreaExpertisePageProps) {
   const { id } = await params
-  const agent = await fetchAgentProfile(id)
+  const [agent, areas, { content }] = await Promise.all([
+    loadAgentProfile(id),
+    loadAgentAreaExpertise(id),
+    loadAgentsPageContent(),
+  ])
 
   if (!agent) {
     notFound()
   }
 
-  const areas = getAgentAreaExpertise(agent.id)
-
-  return <AgentAreaExpertiseSection agent={agent} areas={areas} />
+  return <AgentAreaExpertiseSection agent={agent} areas={areas ?? []} copy={content.profile} />
 }

@@ -1,1 +1,4 @@
-export { SellPropertyPage as default } from "@/features/services/pages/sell-property-page"
+import { SellPropertyPage, generateSellPropertyMetadata } from "@/features/services/pages/sell-property-page"
+
+export const generateMetadata = generateSellPropertyMetadata
+export default SellPropertyPage

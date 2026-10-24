@@ -33,3 +33,14 @@ export type AgentProfileDetail = RealEstateAgentProfile & {
   policiesParagraphs: string[]
   socialLinks: PropertyAgentSocialLink[]
 }
+
+/** Shared copy for the agent profile tabs; `{name}` is replaced with the agent's name. */
+export type AgentProfileCopy = {
+  aboutTitle: string
+  policiesTitle: string
+  areaExpertiseTitle: string
+  areaExpertiseDescription: string
+  contactTitle: string
+  contactDescription: string
+  contactSuccessMessage: string
+}
