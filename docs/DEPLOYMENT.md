@@ -161,7 +161,7 @@ gunzip -c /opt/a7-website-backups/db-YYYYMMDD-HHMMSS.sql.gz \
   | docker exec -i a7-website-postgres psql -U a7_website -d a7_website
 ```
 
-Restore uploads:
+Restore uploads (and `lead-files-*.tar.gz` the same way for CVs):
 
 ```bash
 tar -xzf /opt/a7-website-backups/uploads-YYYYMMDD-HHMMSS.tar.gz -C /opt/a7-website-data
@@ -181,6 +181,18 @@ tar -xzf /opt/a7-website-backups/uploads-YYYYMMDD-HHMMSS.tar.gz -C /opt/a7-websi
 The first owner is seeded from `OWNER_*`. Additional users are created in
 **Admin → (users)** by an owner. To (re)seed the owner non-interactively, set
 `OWNER_*` and run `npm run db:seed` (idempotent — it skips an existing email).
+
+### Forgotten password
+
+On the server (Hostinger → VPS → Web console):
+
+```bash
+bash /opt/a7-website/scripts/reset-admin.sh
+```
+
+It lists the admin accounts, asks which email to reset and the new password
+(typed twice, hidden). Owners can also set any user's password in
+**Admin → Users**, and everyone can change their own under **My account**.
 
 ## 8. Optional: admin subdomain (future)
 

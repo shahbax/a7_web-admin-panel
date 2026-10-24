@@ -148,9 +148,14 @@ export async function saveContentDraft(
   const def = requireDefinition(key)
   const defaults = def.defaults()
   const content = toEditable(mergeContent(defaults, input.content, contentShape(defaults))) ?? null
-  const draft: StoredContent = { content }
+  // Unchanged from the code defaults: store nothing, so later code updates still apply.
+  const unchanged = JSON.stringify(content) === JSON.stringify(toEditable(defaults) ?? null)
+  const draft: StoredContent = unchanged ? {} : { content }
   if (def.kind === "single" && def.sections?.length) {
-    draft.layout = resolveLayout(def.sections, input.layout)
+    const layout = resolveLayout(def.sections, input.layout)
+    const isDefault =
+      layout.hidden.length === 0 && layout.order.join() === def.sections.map((s) => s.key).join()
+    if (!isDefault) draft.layout = layout
   }
   const json = draft as unknown as Prisma.InputJsonValue
   await prisma.contentDoc.upsert({

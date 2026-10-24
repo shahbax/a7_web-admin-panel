@@ -20,8 +20,15 @@ if [ -d "$DATA_DIR" ]; then
   tar -czf "$BACKUP_DIR/uploads-$STAMP.tar.gz" -C "$(dirname "$DATA_DIR")" "$(basename "$DATA_DIR")"
 fi
 
+echo "[backup] $STAMP lead attachments (CVs)"
+LEAD_FILES_DIR=${LEAD_FILES_DIR:-$(dirname "$DATA_DIR")/lead-files}
+if [ -d "$LEAD_FILES_DIR" ]; then
+  tar -czf "$BACKUP_DIR/lead-files-$STAMP.tar.gz" -C "$(dirname "$LEAD_FILES_DIR")" "$(basename "$LEAD_FILES_DIR")"
+fi
+
 echo "[backup] pruning backups older than 14 days"
 find "$BACKUP_DIR" -name 'db-*.sql.gz' -mtime +14 -delete
 find "$BACKUP_DIR" -name 'uploads-*.tar.gz' -mtime +14 -delete
+find "$BACKUP_DIR" -name 'lead-files-*.tar.gz' -mtime +14 -delete
 
 echo "[backup] done"
