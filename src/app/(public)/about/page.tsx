@@ -1,4 +1,4 @@
-import { aboutPageMetadata, AboutPageRoute } from "@/features/about/pages/about-page"
+import { AboutPageRoute, generateAboutMetadata } from "@/features/about/pages/about-page"
 
-export const metadata = aboutPageMetadata
+export const generateMetadata = generateAboutMetadata
 export default AboutPageRoute

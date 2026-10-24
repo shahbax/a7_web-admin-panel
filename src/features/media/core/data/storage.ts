@@ -2,8 +2,6 @@ import { randomUUID } from "node:crypto"
 import { mkdir, writeFile, unlink } from "node:fs/promises"
 import path from "node:path"
 
-import sharp from "sharp"
-
 import type { MediaKind } from "@/features/media/core/domain/entity"
 import { MAX_UPLOAD_BYTES, UPLOADS_ROOT } from "@/shared/lib/uploads/config"
 
@@ -72,6 +70,8 @@ export async function storeUpload(
   let height: number | null = null
   if (kind === "IMAGE" && file.type !== "image/svg+xml") {
     try {
+      // Loaded lazily so a missing native build never takes the server down.
+      const { default: sharp } = await import("sharp")
       const meta = await sharp(buffer).metadata()
       width = meta.width ?? null
       height = meta.height ?? null

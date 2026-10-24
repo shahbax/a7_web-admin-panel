@@ -4,42 +4,36 @@ import {
   MarketingHeroSection,
   ServiceMarketingPageLayout,
 } from "@/shared/ui/marketing"
-import {
-  ABOUT_BREADCRUMBS,
-  aboutContactSectionProps,
-  aboutCtaBannerProps,
-  aboutFaqSectionProps,
-  aboutHeroProps,
-  aboutStatsShowcaseSectionProps,
-  aboutStoryGoalsSectionProps,
-  aboutTestimonialsSectionProps,
-  aboutTrustSectionProps,
-} from "@/features/about/services/content"
+import type { SectionLayout } from "@/features/cms/site-content/core/types"
+import { ABOUT_BREADCRUMBS } from "@/features/about/services/content"
+import type { AboutContent } from "@/features/about/services/about-content"
 
 import { AboutStatsShowcaseSection } from "./about-stats-showcase-section"
 import { AboutStoryGoalsSection } from "./about-story-goals-section"
 import { AboutTrustSection } from "./about-trust-section"
 
-export function AboutPage() {
+export function AboutPage({ content, layout }: { content: AboutContent; layout?: SectionLayout }) {
   return (
     <ServiceMarketingPageLayout
-      hero={<MarketingHeroSection {...aboutHeroProps} />}
+      layout={layout}
+      hero={<MarketingHeroSection {...content.hero} />}
       intro={
         <>
           <MarketingBreadcrumbsBand items={ABOUT_BREADCRUMBS} />
-          <AboutTrustSection {...aboutTrustSectionProps} breadcrumbs={undefined} className="pt-6 md:pt-8" />
+          <AboutTrustSection {...content.trust} breadcrumbs={undefined} className="pt-6 md:pt-8" />
         </>
       }
       grid={
         <>
-          <AboutStoryGoalsSection {...aboutStoryGoalsSectionProps} />
-          <MarketingCtaBannerSection {...aboutCtaBannerProps} />
+          <AboutStoryGoalsSection {...content.storyGoals} />
+          <MarketingCtaBannerSection {...content.ctaBanner} />
         </>
       }
-      afterGrid={<AboutStatsShowcaseSection {...aboutStatsShowcaseSectionProps} />}
-      testimonialsSectionProps={aboutTestimonialsSectionProps}
-      faqSectionProps={aboutFaqSectionProps}
-      contactSectionProps={aboutContactSectionProps}
+      afterGrid={<AboutStatsShowcaseSection {...content.statsShowcase} />}
+      testimonialsSectionProps={content.testimonials}
+      faqSectionProps={content.faq}
+      contactSectionProps={content.contact}
+      newsletterProps={content.newsletter}
     />
   )
 }

@@ -4,6 +4,7 @@ import {
   FileText,
   Layers,
   Inbox,
+  PanelsTopLeft,
   Settings as SettingsIcon,
   type LucideIcon,
 } from "lucide-react"
@@ -22,11 +23,12 @@ export type AdminNavItem = {
 
 /**
  * Admin navigation. Items are added here as each phase ships its screens, so
- * the sidebar never shows dead links. Phase 1 ships Dashboard + Media library.
+ * the sidebar never shows dead links.
  */
 export const adminNavItems: readonly AdminNavItem[] = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Pages", href: "/admin/pages", icon: FileText },
+  { label: "Website content", href: "/admin/content", icon: PanelsTopLeft },
+  { label: "Custom pages", href: "/admin/pages", icon: FileText },
   { label: "Collections", href: "/admin/collections", icon: Layers },
   { label: "Media library", href: "/admin/media", icon: ImageIcon },
   { label: "Leads", href: "/admin/leads", icon: Inbox },

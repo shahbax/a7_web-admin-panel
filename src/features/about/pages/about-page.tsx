@@ -1,13 +1,14 @@
 import type { Metadata } from "next"
 
 import { AboutPage } from "@/features/about/ui/about"
-import { ABOUT_PAGE_DESCRIPTION, ABOUT_PAGE_TITLE } from "@/features/about/content/about-page-content"
+import { loadAboutContent } from "@/features/about/services/about-content"
 
-export const aboutPageMetadata: Metadata = {
-  title: `${ABOUT_PAGE_TITLE} | A Seven Properties`,
-  description: ABOUT_PAGE_DESCRIPTION,
+export async function generateAboutMetadata(): Promise<Metadata> {
+  const { content } = await loadAboutContent()
+  return { title: content.seo.title, description: content.seo.description }
 }
 
-export function AboutPageRoute() {
-  return <AboutPage />
+export async function AboutPageRoute() {
+  const { content, layout } = await loadAboutContent()
+  return <AboutPage content={content} layout={layout} />
 }

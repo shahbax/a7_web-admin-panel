@@ -151,3 +151,27 @@ export async function deleteMediaAction(
   revalidatePath("/admin/media")
   return { ok: true }
 }
+
+export type PickerMedia = { id: string; url: string; alt: string; name: string }
+
+/** Images for the content editor's media picker. */
+export async function listPickerMediaAction(search: string): Promise<PickerMedia[]> {
+  await requireUser()
+  const items = await mediaRepository.list({ kind: "IMAGE", search: search.trim() || undefined })
+  return items.slice(0, 120).map((m) => ({ id: m.id, url: m.url, alt: m.alt, name: m.originalName }))
+}
+
+/** Upload straight from the content editor; returns the new image URL. */
+export async function quickUploadImageAction(
+  formData: FormData,
+): Promise<{ url?: string; error?: string }> {
+  const file = formData.get("file")
+  if (!(file instanceof File) || file.size === 0) return { error: "Choose an image." }
+  if (kindForMime(file.type) !== "IMAGE") return { error: "Only images can be used here." }
+  if (!formData.get("alt")) formData.set("alt", file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " "))
+  formData.set("folder", String(formData.get("folder") ?? "content"))
+  const res = await uploadMediaAction({}, formData)
+  if (res.error) return { error: res.error }
+  const [latest] = await mediaRepository.list({ kind: "IMAGE", search: file.name })
+  return latest ? { url: latest.url } : { error: "Uploaded, but could not find the file." }
+}

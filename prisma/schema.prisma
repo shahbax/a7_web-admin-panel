@@ -228,3 +228,22 @@ model LoginAttempt {
   @@index([ip, createdAt])
   @@map("login_attempts")
 }
+
+// -----------------------------------------------------------------------------
+// Site content documents — the editable content of every coded page/section
+// (home, about, services, areas, developers, events, careers, projects, agents…).
+// Defaults live in code (features/*/content); a document stores the admin's
+// edits as JSON, deep-merged over the defaults so layouts never change.
+// -----------------------------------------------------------------------------
+
+model ContentDoc {
+  key         String    @id // e.g. "page.about", "dataset.areas"
+  draft       Json
+  published   Json?
+  updatedById String?
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("content_docs")
+}
